@@ -1548,5 +1548,37 @@ body.modal-open {
     margin-bottom: 1rem;
     transform: translateX(20px);
 }
-    
+ /* Instagram footer icon final fix */
+.instagram-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 52px !important;
+    height: 52px !important;
+    padding: 0 !important;
+    background: var(--gray-900) !important;
+    color: var(--yellow-400) !important;
+    border: 1px solid rgba(250, 204, 21, 0.35) !important;
+    border-radius: 0.5rem !important;
+    text-decoration: none !important;
+    font-size: 34px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+}
+
+.instagram-icon-text {
+    display: block !important;
+    color: var(--yellow-400) !important;
+    line-height: 1 !important;
+    transform: translateY(-1px);
+}
+
+.instagram-link:hover {
+    background: var(--yellow-400) !important;
+    color: var(--black) !important;
+}
+
+.instagram-link:hover .instagram-icon-text {
+    color: var(--black) !important;
+}   
 }
