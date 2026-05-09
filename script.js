@@ -138,26 +138,26 @@ window.addEventListener('resize', () => {
 
 let currentDashboardIndex = 0;
 
-openmodal = [
+const dashboardData = [
     {
         name: 'Student Dashboard',
-        image: '../assets/images/dashboard-student.png'
+        image: '/assets/images/dashboard-student.png'
     },
     {
         name: 'Parent Dashboard',
-        image: '../assets/images/dashboard-parent.png'
+        image: '/assets/images/dashboard-parent.png'
     },
     {
         name: 'Kitchen Staff Dashboard',
-        image: '../assets/images/dashboard-kitchen.png'
+        image: '/assets/images/dashboard-kitchen.png'
     },
     {
         name: 'Canteen Manager Dashboard',
-        image: '../assets/images/dashboard-canteen.png'
+        image: '/assets/images/dashboard-canteen.png'
     },
     {
         name: 'School Manager Dashboard',
-        image: '../assets/images/dashboard-school.png'
+        image: '/assets/images/dashboard-school.png'
     }
 ];
 
