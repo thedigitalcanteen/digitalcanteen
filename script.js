@@ -138,26 +138,26 @@ window.addEventListener('resize', () => {
 
 let currentDashboardIndex = 0;
 
-const dashboardData = [
+openmodal = [
     {
         name: 'Student Dashboard',
-        image: 'assets/images/dashboard-student.png'
+        image: '../assets/images/dashboard-student.png'
     },
     {
         name: 'Parent Dashboard',
-        image: 'assets/images/dashboard-parent.png'
+        image: '../assets/images/dashboard-parent.png'
     },
     {
         name: 'Kitchen Staff Dashboard',
-        image: 'assets/images/dashboard-kitchen.png'
+        image: '../assets/images/dashboard-kitchen.png'
     },
     {
         name: 'Canteen Manager Dashboard',
-        image: 'assets/images/dashboard-canteen.png'
+        image: '../assets/images/dashboard-canteen.png'
     },
     {
         name: 'School Manager Dashboard',
-        image: 'assets/images/dashboard-school.png'
+        image: '../assets/images/dashboard-school.png'
     }
 ];
 
@@ -271,13 +271,9 @@ function openModal() {
 
     if (!modal || !form || !confirmDialog || !successMessage) return;
 
-    // Save scroll position and prevent body scroll
-    savedScrollPosition = window.scrollY;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${savedScrollPosition}px`;
-    document.body.style.width = '100%';
-    document.body.classList.add('modal-open');
+    // Prevent background scroll while keeping page position stable
+document.body.style.overflow = 'hidden';
+document.body.classList.add('modal-open');
 
     // Reset modal state
     form.style.display = 'flex';
@@ -298,13 +294,9 @@ function closeModal() {
 
     modal.classList.remove('show');
 
-    // Restore scroll position and allow body scroll
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    document.body.classList.remove('modal-open');
-    window.scrollTo(0, savedScrollPosition);
+   // Restore background scroll without forcing page movement
+document.body.style.overflow = '';
+document.body.classList.remove('modal-open');
 }
 
 // Handle form submission with Web3Forms
