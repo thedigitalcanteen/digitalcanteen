@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Canteen Dashboard</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="Parents/css/style.css">
+
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<!-- <link rel="stylesheet" href="Students/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script> -->
+            <style>
+            :root {
+                --primary-gold: #D4B055;
+                --dark-gray: #333333;
+                --light-bg: #F8F8F8;
+                --white: #FFFFFF;
+                --text-main: #333333;
+                --text-muted: #777777;
+                --sidebar-width: 240px;
+                --right-sidebar-width: 300px;
+                --border-radius: 12px;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            body {
+                background-color: var(--light-bg);
+                color: var(--text-main);
+                display: flex;
+                min-height: 100vh;
+            }
+
+            /* Sidebar Styles */
+            aside.left-sidebar {
+                width: var(--sidebar-width);
+                background-color: var(--white);
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid #eee;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+
+            .logo-container {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .logo-container img {
+                width: 80px;
+                margin-bottom: 10px;
+            }
+
+            .logo-text {
+                font-weight: 700;
+                font-size: 18px;
+                color: var(--primary-gold);
+                line-height: 1.1;
+                text-transform: uppercase;
+            }
+
+            nav ul {
+                list-style: none;
+            }
+
+            nav ul li {
+                margin-bottom: 10px;
+            }
+
+            nav ul li a {
+                text-decoration: none;
+                color: var(--text-muted);
+                font-size: 14px;
+                padding: 12px 15px;
+                display: block;
+                border-radius: var(--border-radius);
+                transition: all 0.3s;
+            }
+
+            nav ul li a.active {
+                background-color: var(--primary-gold);
+                color: var(--white);
+            }
+
+            nav ul li a:hover:not(.active) {
+                background-color: #f0f0f0;
+            }
+
+            .subscription-card {
+                margin-top: auto;
+                background-color: var(--dark-gray);
+                color: var(--white);
+                padding: 20px;
+                border-radius: var(--border-radius);
+                text-align: center;
+            }
+
+            .subscription-card h4 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .subscription-card p {
+                font-size: 11px;
+                color: #ccc;
+                margin-bottom: 15px;
+                line-height: 1.4;
+            }
+
+            .btn-subscribe {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                width: 100%;
+            }
+
+            /* Main Content Styles */
+            main {
+                flex-grow: 1;
+                padding: 30px;
+                overflow-y: auto;
+            }
+
+            header {
+                background-color: #333;
+                padding: 15px 40px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .search-container {
+                position: relative;
+                width: 400px;
+            }
+
+            .search-container input {
+                width: 100%;
+                padding: 12px 20px 12px 45px;
+                border-radius: 10px;
+                border: none;
+                background-color: #fff;
+                font-size: 14px;
+            }
+
+            .search-container i {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999;
+            }
+
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .balance-card {
+                text-align: center;
+                background-color: #d4af37;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: auto;
+            }
+
+            .balance-label {
+                font-size: 10px;
+                text-transform: capitalize;
+                font-weight: 600;
+                display: block;
+                margin-bottom: 2px;
+            }
+
+            .balance-amount {
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .icon-btn {
+                background-color: #fff;
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #333;
+                cursor: pointer;
+                position: relative;
+            }
+
+            .notification-dot {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 8px;
+                height: 8px;
+                background-color: #ff4d4d;
+                border-radius: 50%;
+                border: 2px solid #fff;
+            }
+
+            .search-bar {
+                    background-color: white;
+                    border-radius: 10px;
+                    padding: 8px 15px;
+                    display: flex;
+                    align-items: center;
+                    width: 400px;
+            }
+
+            .search-bar input {
+                border: none;
+                outline: none;
+                margin-left: 10px;
+                width: 100%;
+                font-size: 14px;
+            }
+
+            .search-bar i {
+                color: var(--primary-gold);
+            }
+
+            .header-right {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            /* Recent Order Section */
+            .recent-order-container {
+                background-color: var(--primary-gold);
+                border-radius: 20px;
+                padding: 20px;
+                margin-bottom: 30px;
+                margin-top: 30px;
+            }
+
+            .recent-order-container h2 {
+                color: var(--white);
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .recent-order-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+            }
+
+            .order-card {
+                background-color: var(--white);
+                border-radius: 15px;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .order-card img {
+                width: 100%;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+
+            .order-meta {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+
+            .order-meta span {
+                font-size: 9px;
+                background-color: #f0f0f0;
+                padding: 2px 8px;
+                border-radius: 4px;
+                color: var(--text-muted);
+            }
+
+            .order-card h3 {
+                font-size: 13px;
+                margin-bottom: 5px;
+            }
+
+            .order-card p {
+                font-size: 9px;
+                color: var(--text-muted);
+                margin-bottom: 10px;
+                line-height: 1.3;
+            }
+
+            .order-card .price {
+                font-weight: 700;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .btn-reorder {
+                background-color: #444;
+                color: var(--white);
+                border: none;
+                padding: 8px;
+                border-radius: 6px;
+                font-size: 12px;
+                cursor: pointer;
+                width: 100%;
+                text-align: center;
+                text-decoration: none;
+            }
+
+            /* Tabs & Category Section */
+            .category-section {
+                background-color: var(--white);
+                border-radius: 20px;
+                padding: 0;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            }
+
+            .tabs {
+                display: flex;
+                background-color: #444;
+            }
+
+            .tab {
+                padding: 15px 30px;
+                color: var(--white);
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 15px;
+            }
+
+            .tab.active {
+                background-color: #555;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+            }
+
+            .category-content {
+                padding: 25px;
+            }
+
+            .category-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .category-header h2 {
+                font-size: 18px;
+            }
+
+            .view-all {
+                color: var(--primary-gold);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .category-icons {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 30px;
+            }
+
+            .category-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100px;
+                height: 110px;
+                border: 1px solid #eee;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .category-item.active {
+                background-color: var(--primary-gold);
+                border-color: var(--primary-gold);
+                color: var(--white);
+            }
+
+            .category-item img {
+                width: 40px;
+                margin-bottom: 10px;
+            }
+
+            .category-item span {
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .menu-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            .menu-card {
+                border: 1px solid #eee;
+                border-radius: 15px;
+                padding: 15px;
+            }
+
+            .menu-card img {
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+
+            .menu-card h3 {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+
+            .menu-card p {
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+            }
+
+            .menu-card .price {
+                font-weight: 700;
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+
+            .btn-add-order {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                width: 100%;
+            }
+
+            /* Right Sidebar Styles */
+            aside.right-sidebar {
+                width: var(--right-sidebar-width);
+                background-color: var(--white);
+                padding: 20px;
+                border-left: 1px solid #eee;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .user-actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .balance-badge {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                padding: 8px 15px;
+                border-radius: 8px;
+                font-size: 12px;
+            }
+
+            .balance-badge span {
+                display: block;
+                font-size: 10px;
+                opacity: 0.8;
+            }
+
+            .icon-btns {
+                display: flex;
+                gap: 10px;
+            }
+
+            .icon-btn {
+                width: 35px;
+                height: 35px;
+                background-color: #f0f0f0;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-main);
+                cursor: pointer;
+            }
+
+            .order-summary-box {
+                background-color: var(--white);
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                overflow: hidden;
+                margin-bottom: 25px;
+            }
+
+            .summary-header {
+                background-color: var(--dark-gray);
+                color: var(--white);
+                padding: 15px;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .summary-items {
+                padding: 15px;
+            }
+
+            .summary-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .summary-item img {
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                object-fit: cover;
+                margin-right: 12px;
+            }
+
+            .summary-item-info {
+                flex-grow: 1;
+            }
+
+            .summary-item-info h4 {
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+
+            .summary-item-info span {
+                font-size: 10px;
+                color: var(--text-muted);
+            }
+
+            .summary-item-price {
+                font-size: 12px;
+                font-weight: 600;
+                text-align: right;
+            }
+
+            .summary-total {
+                padding: 15px;
+                border-top: 1px dashed #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .summary-total h3 {
+                font-size: 18px;
+            }
+
+            .summary-total .total-price {
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .btn-checkout {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 12px;
+                border-radius: 10px;
+                width: calc(100% - 30px);
+                margin: 0 15px 15px 15px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .weekly-plan-box {
+                background-color: var(--dark-gray);
+                border-radius: 15px;
+                padding: 15px;
+                color: var(--white);
+            }
+
+            .weekly-plan-box h3 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+
+            .weekly-plan-box p {
+                font-size: 10px;
+                color: #aaa;
+                margin-bottom: 15px;
+            }
+
+            .calendar-strip {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+
+            .day {
+                text-align: center;
+            }
+
+            .day span {
+                display: block;
+                font-size: 9px;
+                margin-bottom: 5px;
+            }
+
+            .day .dot {
+                width: 4px;
+                height: 4px;
+                background-color: var(--primary-gold);
+                border-radius: 50%;
+                margin: 0 auto;
+            }
+
+            .weekly-item {
+                display: flex;
+                justify-content: space-between;
+                font-size: 11px;
+                margin-bottom: 15px;
+            }
+
+            .weekly-item span:last-child {
+                color: var(--primary-gold);
+                font-weight: 600;
+            }
+
+            .btn-plan {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                width: 100%;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+            }
+
+            footer {
+                position: relative;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #222;
+                color: #888;
+                text-align: right;
+                padding: 20px 40px;
+                font-size: 12px;
+                z-index: 100;
+            }
+            .Full_box{padding: 30px;}
+
+            /* Responsive adjustments */
+            @media (max-width: 1200px) {
+                .recent-order-grid { grid-template-columns: repeat(2, 1fr); }
+                .menu-grid { grid-template-columns: repeat(2, 1fr); }
+                .search-bar { width: 250px; }
+            }
+        </style>
+    
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+<style>
+     
+    @media (max-width: 992px) {
+        .mobilebottomspacing{margin-bottom: 10px;}
+        .dashboard-container {
+            padding: 20px 20px !important;
+            margin-bottom: 30px;
+        }
+        header{
+            padding: 15px 20px !important;
+            display: block !important;
+            place-items: center;
+            height: auto !important;
+        }
+        .wrapper{margin-left: auto !important;}
+        .search-bar {
+            width: 80%;
+            margin-bottom: 10px;
+        }
+        .header-right {
+            /* justify-content: space-between; */
+            width: 100%;
+            justify-content: center;
+        }
+        .welcome-section{
+            text-align: center;
+            display: block !important;
+        }
+        .welcome-text{text-align: center;margin-bottom: 10px;}
+        .top-actions {
+            justify-self: center;
+            width: 100%;
+            /* display: block !important; */
+        }
+        .newtopup {
+            width: 50%;
+        }
+        .top-actions button {width: 100%;margin-bottom: 10px;}
+        .stats-grid{
+            display: block !important;
+        }
+        .stat-card{
+            margin-bottom: 10px;
+        }
+        .section-header{
+            display: block !important;
+        }
+        .children-grid{display: block !important;}
+        .child-card{
+            margin-bottom: 10px;
+        }
+        .dashboard-layout{display: block !important;}
+        .page-header{
+            display: block !important;
+        }
+        .action-btns{display: block !important;}
+        .btn-outline{margin-bottom: 10px;}
+        .stats-grid{display: block !important;}
+        .stat-card{
+            margin-bottom: 10px;
+        }
+        .tabs-filters{display: block !important;}
+        /* .tabs{display: block !important;} */
+        .flex {
+            display: block !important;
+        }
+        .ActionBtnTabs {
+            display: grid !important;
+        }
+        .tab-btn {
+            margin-bottom: 3px;
+        }
+        .w-80{width:100% !important}
+        .summary-cards{display: block !important;}
+        .card-order{margin-bottom: 10px;}
+        .pricing-grid{
+            display: block !important;
+        }
+        .pricing-card{margin-bottom: 10px;}
+        .bottom-row{display: block !important;}
+        .bottom-row .pricing-card{width: 100% !important;}
+        .btn{width: 100%;}
+        .transaction-header{display: block !important;}
+        /* .recent-order-grid{display: block !important;} */
+        /* .tabs{font-size: 10px !important;} */
+        .tabs{margin-bottom: 0 !important;}
+        .category-section .tab.active{margin: 0 !important;}
+        .menusearchbar{float: none !important;justify-content: center;}
+        .menusearchbar input{margin: 0;}
+        /* .category-icons{display: block !important;} */
+        .menu-grid{display: block !important;}
+        .main-layout{display: block !important;margin-left: auto !important;}
+        .container{padding: 20px !important;}
+        .alertcard-header{display: block !important;}
+        .setting-item{display: block !important;}
+        .alertcard{display: block !important;}
+        .alertcard div{display: block !important;}
+        .filters{display: block !important;}
+        .filters button{width: 100%;}
+        .calendar-header{display: block !important;}
+        .calendar-legend{display: block !important;}
+        .calendar-grid{overflow: auto;}
+        .order-card{margin-bottom: 10px;}
+        .popup-content{width: 90% !important;}
+        aside {
+        position: fixed !important;
+        transform: translateX(-100%);
+        height: 100% !important;
+        }
+
+        aside.active {
+            transform: translateX(0);
+            z-index: 999;
+            width: 100% !important;
+        }
+        .mobile-menu-open{overflow: hidden;}
+        .custom-logo {
+            margin-bottom: 20px !important;
+            width: stretch;
+        }
+        .logo-top img {
+            display: none;
+        }
+        .logo-container {
+            padding: 0 20px 10px !important;
+        }
+        nav ul li a{padding: 10px !important;}
+
+        /* Floating mobile menu button */
+        .mobile-menu-btn {
+            position: fixed;
+            left: 20px;
+            top: 15px;
+            z-index: 1001;
+            font-size: 12px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 16px 4px !important;
+            cursor: pointer;
+            display: block !important;
+        }
+
+        /* Overlay effect */
+        main.mobile-menu-open::after {
+            content: '';
+            position: fixed;
+            left: 0; top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+        main{margin-left: 0 !important;}
+        .search-container{width: 80% !important;}
+        /* .category-item {width: 100% !important;margin-bottom: 10px;} */
+        .transactions-section{overflow: auto;}
+        .action-buttons{display: block !important;margin-top: 10px;}
+        .action-buttons button{margin-bottom: 10px;}
+        .toggle-btn {
+            width: 100%;
+            background: #d0ae27 !important;
+            border-radius: 5px;
+            color: white;
+            padding: 10px;
+        }
+        .meal-item{
+            display: block !important;
+            place-items: center;
+            text-align: center;
+        }
+        .meal-icon-wrapper{margin-bottom: 10px;}
+        .meal-details{margin-bottom: 10px;}
+        .search-container input{width: 90%;}
+        .search-container{margin-bottom: 10px;}
+        .wrapper main{display: block !important;}
+        .form-actions {display: block !important;}
+        .form-actions button{margin-bottom: 10px;}
+        .badge{position: relative;}
+        .search-container{margin-left: 28px;max-width: 80% !important;}
+        body{display: block !important;}
+        .header-right{margin-top: 10px;}
+        .card-header{display: block !important;}
+        .card-header h2{margin-bottom: 10px;}
+        .card-header-actions{display: block !important;}
+        .card-header-actions .btn{margin-bottom: 10px;}
+        header{
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+        /* .header-actions{
+            width: 100%;
+            justify-content: space-between;
+        } */
+        footer {
+            padding: 10px;
+            text-align: center;
+        }
+        .page-title h1{font-size: 26px !important;}
+        .card-header h2 {font-size: 22px !important;}
+        .add-meal-btn{padding: 15px !important;}
+        .child-avatar {
+            width: 37px !important;
+            height: 37px !important;
+        }
+        .search-container input{padding: 8px 20px 8px 45px !important;}
+        .category-item span{display: ruby !important;}
+        .category-item{height: 90px !important;}
+        .topbarset .icon-btn{
+            display: flex !important;
+            position: absolute;
+            right: 15px;
+        }
+        .topbarset{justify-content: center !important;}
+        .subscription-card{display: none;}
+        .ATMCard .card_logo{
+            height: 1em !important;
+            bottom: 1.0em !important;
+        }
+        .ATMCard .card_number{margin-top: 0 !important;}
+        .ActionBtnTabs .tab-btn{border: 1px solid #121828;margin-bottom: 10px;}
+        #calendar .stat-icon{display: none;}
+        #calendar .stat-label
+        {
+            margin-bottom: 0 !important;
+        }
+        #calendar .stat-value
+        {
+            margin-bottom: 0 !important;
+            float: right;
+            margin-top: -20px;
+            font-size: 18px;
+        }
+        #billing .card-icon{display: none;}
+        #billing .card-order
+        {
+            display: block;
+            border: 3px solid #d0af4e;
+            
+        }
+        #billing .label
+        {
+            margin-bottom: 0 !important;
+        }
+        #billing .trend
+        {
+            display: block;
+        }
+        #billing .value
+        {
+            margin-bottom: 0 !important;
+            float: right;
+            margin-top: -20px;
+            font-size: 15px;
+        }
+        .form-actions .btn-cancel{margin-bottom: 10px;}
+        .payment-section .stat-card{padding: 15px;}
+        .payment-section .icon-top{display: none;}
+        .payment-section .stat-label{margin-bottom: 0;font-size: 9px;}
+        .payment-section .stat-value{margin-bottom: 0;font-size: 12px;float: right;margin-top: -17px;}
+        .payment-section .ATMCard{
+            background: linear-gradient(0deg, #fffbf0 0%, #ffffff 50%, #ffffff 100%) !important;
+        }
+        .ATMCard.active-card {
+            background: #e1c67626 !important;
+            border: 2px solid #d0b04e !important;
+        }
+        
+    }
+    
+    
+    @media (min-width: 992px) and (max-width: 1300px) {
+        .category-item {width: auto !important;}
+        .menu-grid{
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+        .recent-order-grid{
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
+        .category-item {
+            width: 60px !important;
+        }
+        .menusearchbar{
+            width: 100% !important;
+        }
+    }
+    @media (min-width: 993px) {
+            .order-card{
+                transition: all 0.3s ease;
+            }
+            .order-card:hover{
+                transition: all 0.3s ease;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .category-item{
+                transition: all 0.3s ease;
+            }
+            .category-item:hover{
+                background-color: #d4b055;
+                border-color: #d4b055;
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .menu-card{
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .menu-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .newtopup a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .newtopup a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c9a758;
+                color: white;
+            }
+            .orderButton{
+                transition: all 0.3s ease;
+            }
+            .orderButton:hover{
+                transform: translateY(-5px);
+                /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
+                background: #c9a758;
+            }
+            .child-avatar {
+                width: 50px !important;
+                height: 37px !important;
+            }
+            .btn-outline{
+                transition: all 0.3s ease;
+            }
+            .btn-outline:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-primary{
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.sarah{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.sarah:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.alex{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.alex:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn {
+                transition: all 0.3s ease !important;
+            }
+            .btn-secondary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .schedule-card .meal-item{
+                transition: all 0.3s ease;
+            }
+            .schedule-card .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #e5d5a1;
+            }
+            .tab-btn:hover {
+                border-bottom: 3px solid #c9a758;
+            }
+            .calendar-day .meal-item{
+                transition: all 0.3s ease;
+            }
+            .calendar-day .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .day-actions .btn-action{
+                transition: all 0.3s ease;
+            }
+            .day-actions .btn-action:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .stat-card{
+                transition: all 0.3s ease;
+            }
+            .stat-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .balance-pill{
+                transition: all 0.3s ease;
+            }
+            .balance-pill:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-card{
+                transition: all 0.3s ease;
+            }
+            .meal-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #c9a758;
+            }
+            .icon-btn{
+                transition: all 0.3s ease;
+            }
+            .icon-btn:hover{
+                animation: bounce 0.4s;
+            }
+            @keyframes bounce {
+                0%   { transform: translateY(0); }
+                30%  { transform: translateY(-6px); }
+                60%  { transform: translateY(3px); }
+                100% { transform: translateY(0); }
+            }
+            .ActionBtnTabs .tab-btn.active {
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .ActionBtnTabs .tab-btn{
+                border: 1px solid #ccc !important;
+                transition: all 0.3s ease;
+            }
+            
+            .ActionBtnTabs .tab-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #111827;
+                color:white;
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .quick-pay-btn{
+                transition: all 0.3s ease;
+            }
+            .quick-pay-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card-order{
+                transition: all 0.3s ease;
+            }
+            .card-order:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .action-btn{
+                transition: all 0.3s ease;
+            }
+            .action-btn:hover{
+                transform: translateY(-5px);
+            }
+            .page-num{
+                transition: all 0.3s ease;
+            }
+            .page-num:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #eec218;
+                color: white;
+            }
+            .filter-btn{
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c6a752;
+                color: white;
+            }
+            .section-header .view-link:hover{
+                color: #ebaa12;
+            }
+            .order-card .btn-reorder:hover{
+                background-color: #c9a758;
+            }
+            .btn-add-order{
+                
+            }
+            .btn-add-order:hover{
+                background-color: #c9a758 !important;
+            }
+            .pencilcolor svg{
+                transition: all 0.3s ease;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .meal-actions .remove-meal:hover{
+                animation: bounce 0.4s;
+            }
+            .btn-cancel{
+                transition: all 0.3s ease;
+            }
+            .btn-cancel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white;
+            }
+            .btn-save{
+                transition: all 0.3s ease;
+            }
+            .btn-save:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+            }
+            .btnarrow:hover{
+                color: #996d00;
+            }
+            #prevMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            #nextMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            .topupsetcolor{
+                transition: all 0.3s ease;
+            }
+            .topupsetcolor:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .plus:hover{
+                background-color: #996d00;
+            }
+            .minus:hover{
+                background-color: #996d00;
+            }
+            nav ul li a:hover:not(.active) {
+                background: linear-gradient(90deg, #d4af37, #e5d5a1);
+                color:white;
+            }
+            .save-btn-alert{
+                transition: all 0.3s ease;
+            }
+            .save-btn-alert:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-change{
+                transition: all 0.3s ease;
+                color: white;
+            }
+            .btn-change:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .child-alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .child-alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+                   .btn-pay{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .btn-pay:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+                .quick-btn{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .quick-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+        }
+
+   
+        .table-search .fa-magnifying-glass {
+            position: absolute;
+            left: 8px;
+            align-self: center;
+        }
+        .mobile-menu-btn{display: none;}
+        
+        .child-info{
+            display: flex;
+            gap: 15px;
+        }
+        .child-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+        }
+
+        .custom-logo {
+            text-align: center;
+            margin-bottom: 55px !important;
+            align-self: center;
+        }
+        aside.left-sidebar{
+            padding: 20px 20px;
+        }
+        .topbarset{display: flex;justify-content: space-between;width: 100%;}
+        .topbarset .icon-btn{display: none;}
+
+        .menu-icon{
+    width: 25px;
+    height: 2px;
+    background: #000;
+    display: block;
+    position: relative;
+    transition: 0.3s;
+}
+
+.menu-icon::before,
+.menu-icon::after{
+    content: "";
+    position: absolute;
+    width: 25px;
+    height: 2px;
+    background: #000;
+    left: 0;
+    transition: 0.3s;
+}
+
+.menu-icon::before{
+    top: -8px;
+}
+
+.menu-icon::after{
+    top: 8px;
+}
+
+/* ✅ WHEN ACTIVE → CROSS */
+.mobile-menu-btn.active .menu-icon{
+    background: transparent;
+}
+
+.mobile-menu-btn.active .menu-icon::before{
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.mobile-menu-btn.active .menu-icon::after{
+    top: 0;
+    transform: rotate(-45deg);
+} 
+
+    
+    
+</style>
+<script>
+$(document).ready(function(){
+
+    $('.mobile-menu-btn').click(function(e){
+        e.stopPropagation();
+
+        $('aside').toggleClass('active');
+        $('body').toggleClass('mobile-menu-open');
+
+        // ✅ TOGGLE BUTTON STATE
+        $(this).toggleClass('active');
+    });
+
+    $(document).click(function(e){
+        if(!$(e.target).closest('aside, .mobile-menu-btn').length){
+
+            $('aside').removeClass('active');
+            $('body').removeClass('mobile-menu-open');
+
+            // ✅ RESET ICON
+            $('.mobile-menu-btn').removeClass('active');
+        }
+    });
+
+});
+</script><body>
+	<style>
+			.btn-checkout-new {
+    background-color: var(--primary-gold);
+    color: var(--white);
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    width: calc(100% - 30px);
+    margin: 0 15px 15px 15px;
+    display: block;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+aside {
+    width: var(--sidebar-width);
+    width: 260px;
+    background-color: var(--white);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+.subscription-card {
+    margin-top: auto;
+    background-color: var(--dark-gray);
+    color: var(--white);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+.plan-card {
+    margin-top: auto;
+    background-color: #4a4a4a;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    position: relative;
+}
+.plan-card h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+.plan-card p {
+    font-size: 11px;
+    line-height: 1.5;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+.update-btn {
+    display: block;
+    text-align: center;
+    background-color: var(--primary-gold);
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+	</style>
+
+    <!-- Sidebar -->
+    <button class="mobile-menu-btn">
+    <!-- <i class="fas fa-bars"></i> -->
+    <span class="menu-icon"></span>
+</button>
+<aside>
+    <div class="logo">
+        <div class="logo-icon">
+            <a href="index.html">
+                <img src="Parents/images/canteen_logo.png">
+            </a>
+        </div>
+    </div>
+
+    <nav>
+        <ul>
+                        <li><a href="parentsdashboard.html" class="">Order Here</a></li>
+            <!-- <li><a href="parentshomepage.html" class="active">Overview</a></li> -->
+            <li><a href="parentschildren.html" class="">Children</a></li>
+            <li><a href="parentsorderhistory.html" class="">Order & Billing History</a></li>
+            <!-- <li><a href="parentsschoolmenu.html" class="">School Menus</a></li> -->
+            <li><a href="parentpre-order.html" class="">Schedule Your Order</a></li>
+            <li><a href="parentspaythecard.html" class="">TopUp & Cards</a></li>
+            <li><a href="parentssettingalert.html" class="">Settings</a></li>
+            <!-- <li><a href="parentsbilling.html" class="">Order & Billing History</a></li> -->
+        </ul>
+    </nav>
+
+    
+    <div class="plan-card">
+        <h3>Basic Plan</h3>
+        <p>Choose the plan that fits your needs and subscribe in just a few clicks. Simple pricing, no hassle.</p>
+        <a class="update-btn" href="parentspackages.html">Update Plan</a>
+    </div>
+</aside>
+
+<script>
+const rangeInput = document.getElementById("priceRange");
+const priceValue = document.getElementById("priceValue");
+
+// Update value while sliding
+rangeInput.addEventListener("input", function() {
+    priceValue.textContent = this.value+'AED';
+});
+</script>
+<style>
+    .update-btn{display: block;text-align: center;}
+    aside{padding: 20px;}
+    .logoutactive {
+        border: 1px solid #d1b02d;
+    }
+    .logoutactive:hover {
+        background: linear-gradient(90deg, #d4af37, #e5d5a1);
+        color: white;
+    }
+</style>
+
+
+    <!-- Main Content -->
+    <main>
+        <header>
+    <div class="topbarset">
+        <div class="search-bar">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" placeholder="What do you want eat today...">
+        </div>
+        <a href="parentsdashboard.html">
+            <div class="icon-btn">
+                <i class="fa-solid fa-home"></i>
+            </div>
+        </a>
+    </div>
+    <div class="header-right">
+        <!-- <div class="balance-pill">
+            <span>Balance</span>
+            <span>AED 150.00</span>
+        </div> -->
+        <div class="icon-btn" id="NotificationBtn">
+            <i class="fa-regular fa-bell"></i>
+            <div class="badge"></div>
+        </div>
+        <a href="parentssettingalert.html">
+            <div class="icon-btn">
+                <i class="fa-solid fa-cog"></i>
+            </div>
+        </a>
+    </div>
+</header>
+<!-- NEW RESPONSIVE NOTIFICATION POPUP -->
+<div id="notificationPopup" class="notification-popup" style="display:none;">
+    <div class="notification-box">
+        <span class="close-notification">&times;</span>
+        <h2>Important Notice</h2>
+        <div class="" id="notificationMessage">
+            <p >Orders placed today must be submitted at least <span>30 minutes</span> before break time.</p>
+            <div class="LateOrder">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Late orders will be delayed to text next session.
+            </div>
+        </div>
+        <button class="noti-btn">I Understand</button>
+        <button class="noti-btn">Review Schedule</button>
+    </div>
+</div>
+<style>
+/* Notification popup styles */
+.notification-box p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.notification-box h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+#notificationMessage p span {
+    color: #d0af4e;
+}
+.LateOrder {
+    color: #c70707;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 11px;
+    background: #ffd4d4;
+    padding: 10px 8px;
+}
+.noti-btn{
+    background-color: #d4b055;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+.noti-btn:hover{
+    background-color: #bf8e14;
+}
+.notification-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    align-content: center;
+    font-family: sans-serif;
+    word-wrap: break-word;
+}
+.notification-popup .notification-box {
+    background: #fff;
+    padding: 20px;
+    width: 350px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    margin: auto;
+}
+.notification-popup .close-notification {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .notification-popup {
+        top: 10px;
+        right: 10px;
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    .notification-popup .close-notification {
+        font-size: 16px;
+        top: 3px;
+        right: 5px;
+    }
+    .notification-popup .notification-box{width: 100%;}
+}
+</style>
+<script>
+$(document).ready(function(){
+
+    // Function to show notification
+    function showNotification(message){
+        $("#notificationMessage").html(message);
+        $("#notificationPopup").fadeIn();
+    }
+
+    // Close notification on close button or any action button
+    $(".close-notification, .noti-btn").click(function(){
+        $("#notificationPopup").fadeOut();
+    });
+
+    // Trigger notification when clicking bell icon
+    $("#NotificationBtn").click(function(e){
+        e.preventDefault();
+
+        const message = `
+            <p >Orders placed today must be submitted at least <span>30 minutes</span> before break time.</p>
+            <div class="LateOrder">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Late orders will be delayed to text next session.
+            </div>
+        `;
+        showNotification(message);
+    });
+
+});
+</script>        <div class="Full_box">
+        
+            <!-- Recent Order Section -->
+            <section class="recent-order-container">
+                <h2>Recent Order</h2>
+                <div class="recent-order-grid">
+                    <!-- Order Card 1 -->
+                    <div class="order-card">
+                        <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                        <div class="order-meta">
+                            <span>23 Oct 2024</span>
+                            <span>Morning</span>
+                        </div>
+                        <h3>Grilled Chicken Wrap</h3>
+                        <p>Fresh seasonal fruits layered with...Fresh seasonal fruits layered with...</p>
+                        <div class="price">AED xxx.xx</div>
+                        <a href="parentscart.html" class="btn-reorder">Order Now</a>
+                    </div>
+                    <!-- Order Card 2 -->
+                    <div class="order-card">
+                        <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                        <div class="order-meta">
+                            <span>23 Oct 2024</span>
+                            <span>Morning</span>
+                        </div>
+                        <h3>Grilled Chicken Wrap</h3>
+                        <p>Fresh seasonal fruits layered with...Fresh seasonal fruits layered with...</p>
+                        <div class="price">AED xxx.xx</div>
+                        <a href="parentscart.html" class="btn-reorder">Order Now</a>
+                    </div>
+                    <!-- Order Card 3 -->
+                    <div class="order-card">
+                        <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                        <div class="order-meta">
+                            <span>23 Oct 2024</span>
+                            <span>Morning</span>
+                        </div>
+                        <h3>Grilled Chicken Wrap</h3>
+                        <p>Fresh seasonal fruits layered with...Fresh seasonal fruits layered with...</p>
+                        <div class="price">AED xxx.xx</div>
+                        <a href="parentscart.html" class="btn-reorder">Order Now</a>
+                    </div>
+                    <!-- Order Card 4 -->
+                    <div class="order-card">
+                        <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                        <div class="order-meta">
+                            <span>23 Oct 2024</span>
+                            <span>Morning</span>
+                        </div>
+                        <h3>Grilled Chicken Wrap</h3>
+                        <p>Fresh seasonal fruits layered with...Fresh seasonal fruits layered with...</p>
+                        <div class="price">AED xxx.xx</div>
+                        <a href="parentscart.html" class="btn-reorder">Order Now</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category Section -->
+            <section class="category-section">
+                <div class="tabs">
+                    <div class="tab active" data-break="morning">Break 1 - Morning</div>
+                    <div class="tab" data-break="afternoon">Break 2 - Afternoon</div>
+                </div>
+                <div class="category-content">
+                    <div class="category-header">
+                        <h2>Category</h2>
+                        <a href="#" class="view-all">View all <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div class="category-icons">
+                        <div class="category-item active" data-category="all">
+                            <span>All <br>Item</span>
+                        </div>
+                        <div class="category-item" data-category="bakery">
+                            <img src="https://img.icons8.com/emoji/48/cupcake-emoji.png" alt="Bakery Icon">
+                            <span>Bakery</span>
+                        </div>
+                        <div class="category-item" data-category="burger">
+                            <img src="https://img.icons8.com/emoji/48/hamburger-emoji.png" alt="Burger Icon">
+                            <span>Burger</span>
+                        </div>
+                        <div class="category-item" data-category="beverage">
+                            <img src="https://img.icons8.com/emoji/48/cup-with-straw-emoji.png" alt="Beverage Icon">
+                            <span>Beverage</span>
+                        </div>
+                        <div class="category-item" data-category="chicken">
+                            <img src="https://img.icons8.com/emoji/48/poultry-leg-emoji.png" alt="Chicken Icon">
+                            <span>Chicken</span>
+                        </div>
+                        <div class="category-item" data-category="pizza">
+                            <img src="https://img.icons8.com/emoji/48/pizza-emoji.png" alt="Pizza Icon">
+                            <span>Pizza</span>
+                        </div>
+                    </div>
+
+                    <div class="menu-grid">
+                        <!-- Menu Item 1 -->
+                        <div class="menu-card" data-break="morning" data-category="bakery">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Bakery Chicken Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <!-- Menu Item 2 -->
+                        <div class="menu-card" data-break="morning" data-category="chicken">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Grilled Chicken Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <!-- Menu Item 3 -->
+                        <div class="menu-card" data-break="morning" data-category="burger">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Burger Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <div class="menu-card" data-break="morning" data-category="beverage">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>beverage Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <div class="menu-card" data-break="morning" data-category="pizza">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Pizza Piper</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+
+                        <!-- afternoon -->
+
+                        <div class="menu-card" data-break="afternoon" data-category="chicken">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Grilled Chicken Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <!-- Menu Item 2 -->
+                        <div class="menu-card" data-break="afternoon" data-category="bakery">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Bakery Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <!-- Menu Item 3 -->
+                        <div class="menu-card" data-break="afternoon" data-category="beverage">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Beverage Wrap</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <div class="menu-card" data-break="afternoon" data-category="burger">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Beef Burger</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                        <div class="menu-card" data-break="afternoon" data-category="pizza">
+                            <img src="https://placehold.co/300x200?text=Chicken+Wrap" alt="A delicious grilled chicken wrap with fresh vegetables">
+                            <h3>Pizza Hut</h3>
+                            <p>Fresh seasonal fruits layered with...</p>
+                            <div class="price">AED 000.00</div>
+                            <a href="parentscart.html" class="btn-add-order">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div style="height: 60px;"></div> <!-- Spacing for footer -->
+        <footer>
+    Design and Develop By RSI Concepts
+</footer>    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="right-sidebar">
+        
+        <div class="order-summary-box">
+            <div class="summary-header">Order Summary</div>
+            <div class="summary-items">
+                <div class="summary-item">
+                    <img src="https://placehold.co/50x50?text=Pizza" alt="Pepperoni Pizza">
+                    <div class="summary-item-info">
+                        <h4>Pepperoni Pizza</h4>
+                        <span>x1</span>
+                    </div>
+                    <div class="summary-item-price">AED 25.25</div>
+                </div>
+                <div class="summary-item">
+                    <img src="https://placehold.co/50x50?text=Pizza" alt="Pepperoni Pizza">
+                    <div class="summary-item-info">
+                        <h4>Pepperoni Pizza</h4>
+                        <span>x1</span>
+                    </div>
+                    <div class="summary-item-price">AED 25.25</div>
+                </div>
+                <div class="summary-item">
+                    <img src="https://placehold.co/50x50?text=Pizza" alt="Pepperoni Pizza">
+                    <div class="summary-item-info">
+                        <h4>Pepperoni Pizza</h4>
+                        <span>x1</span>
+                    </div>
+                    <div class="summary-item-price">AED 25.25</div>
+                </div>
+            </div>
+            <div class="summary-total">
+                <h3>Total</h3>
+                <div class="total-price">AED 23.99</div>
+            </div>
+            <a href="parentscart.html" class="btn-checkout-new">Check Out</a>
+        </div>
+
+        <div class="weekly-plan-box">
+            <h3>Weekly Meal Plan</h3>
+            <p>Plan your meals for the entire week</p>
+            <div class="calendar-strip">
+                <div class="day"><span>Mon</span><div class="dot"></div></div>
+                <div class="day"><span>Tue</span></div>
+                <div class="day"><span>Wed</span></div>
+                <div class="day"><span>Thu</span></div>
+                <div class="day"><span>Fri</span></div>
+            </div>
+            <div class="weekly-item">
+                <span>Lunch - Chicken Sandwich</span>
+                <span>AED 12.00</span>
+            </div>
+            <a class="btn-plan" href="parentspackages.html">Plan Weekly Orders</a>
+        </div>
+    </aside>
+
+    
+
+</body>
+</html>
+<style>
+.btn-add-order {display: block;text-align: center;text-decoration: none;}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const breakTabs = document.querySelectorAll(".tab");
+    const categoryItems = document.querySelectorAll(".category-item");
+    const menuCards = document.querySelectorAll(".menu-card");
+
+    let selectedBreak = "morning";
+    let selectedCategory = "all";
+
+    function filterMenu() {
+        menuCards.forEach(card => {
+            const cardBreak = card.getAttribute("data-break");
+            const cardCategory = card.getAttribute("data-category");
+
+            const breakMatch = cardBreak === selectedBreak;
+            const categoryMatch = selectedCategory === "all" || cardCategory === selectedCategory;
+
+            if (breakMatch && categoryMatch) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+
+    // Break tab click
+    breakTabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+            breakTabs.forEach(t => t.classList.remove("active"));
+            this.classList.add("active");
+
+            selectedBreak = this.getAttribute("data-break");
+            filterMenu();
+        });
+    });
+
+    // Category click
+    categoryItems.forEach(item => {
+        item.addEventListener("click", function () {
+            categoryItems.forEach(i => i.classList.remove("active"));
+            this.classList.add("active");
+
+            selectedCategory = this.getAttribute("data-category");
+            filterMenu();
+        });
+    });
+
+    filterMenu(); // Initial load
+});
+</script>
