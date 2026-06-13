@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Digital Canteen</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px 15px;
+    background-color: #252525;
+}
+
+.login-wrapper{
+    width:100%;
+    max-width:460px;
+    text-align:center;
+}
+
+.logo-top{
+    margin-bottom:45px;
+}
+
+.logo-top img{
+    width:150px;
+    max-width:60%;
+    height:auto;
+}
+
+.login-container{
+    width:100%;
+}
+
+.login-button{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    min-height:58px;
+    margin-bottom:18px;
+    padding:14px 20px;
+    background:#d4b663;
+    color:#fff;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:22px;
+    font-weight:600;
+    transition:0.3s ease;
+    box-shadow:0 8px 18px rgba(212,182,99,0.22);
+}
+
+.login-button:hover{
+    background:#c4a552;
+    transform:translateY(-2px);
+}
+
+@media(max-width:768px){
+    body{
+        align-items:flex-start;
+        padding-top:45px;
+    }
+
+    .logo-top{
+        margin-bottom:35px;
+    }
+
+    .login-button{
+        font-size:20px;
+        min-height:56px;
+    }
+}
+
+@media(max-width:480px){
+    body{
+        padding:35px 18px;
+    }
+
+    .logo-top img{
+        width:130px;
+    }
+
+    .login-button{
+        font-size:18px;
+        min-height:54px;
+        margin-bottom:14px;
+        border-radius:7px;
+    }
+}
+
+@media(max-width:360px){
+    .login-button{
+        font-size:16px;
+        padding:12px 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-wrapper" >
+
+    <div class="logo-top">
+        <img src="images/logo.png" alt="The Digital Canteen Logo">
+    </div>
+
+    <main class="login-container">
+        <a href="studentdashboard.html" class="login-button">Students</a>
+        <a href="parentsdashboard.html" class="login-button">Parents</a>
+        <a href="schoolmanagerdashboard.html" class="login-button">School Manager</a>
+        <a href="kitchendashboard.html" class="login-button">Kitchen Staff</a>
+        <a href="canteenmanagerdashboard.html" class="login-button">Canteen Manager</a>
+        <a href="login.html" class="login-button">Sign Up/Login</a>
+</main>
+
+</div>
+
+</body>
+</html>

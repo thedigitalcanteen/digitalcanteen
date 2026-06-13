@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canteen Manager Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary-gold: #d4b454;
+            --primary-gold-hover: #c4a444;
+            --bg-light: #f8f9fa;
+            --text-dark: #1a1a2e;
+            --text-muted: #6c757d;
+            --sidebar-width: 260px;
+            --border-color: #eef0f2;
+            --active-green-bg: #e6f4ea;
+            --active-green-text: #34a853;
+            --blocked-bg: #f1f3f4;
+            --blocked-text: #5f6368;
+            --action-dark: #344767;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background-color: #fff;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+            z-index: 100;
+        }
+
+        .logo-container {
+            padding: 0 30px 40px 30px;
+            text-align: center;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--primary-gold);
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-bottom: 5px;
+            padding: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 20px;
+            display: block;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a.active {
+            background-color: var(--primary-gold);
+            color: #fff;
+        }
+
+        nav ul li a:hover:not(.active) {
+            background-color: #f0f0f0;
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            /* padding: 40px 50px; */
+            padding-bottom: 100px; /* Space for footer */
+        }
+        .topbarset .icon-btn {
+            display: none;
+            width: 37px;
+            height: 37px;
+        }
+        .search-container .fa-magnifying-glass {
+            color: black;
+            position: absolute;
+            align-self: center;
+            left: 13px;
+        }
+        .header-info{margin: 20px;}
+        .topheader .header-info{margin: 0 !important;}
+        .topheader{margin: 20px;}
+        
+        main .card{margin: 20px;}
+        .icon-btn {
+            background: white;
+            color: #333333;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            background-color: #333333;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 8px;
+            border: none;
+            background-color: white;
+            font-size: 14px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d4af37;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .date-time {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .date-time .time {
+            font-weight: 600;
+            display: block;
+        }
+
+        .date-time .date {
+            color: #d4af37;
+        }
+        .header-info{margin-bottom: 40px;}
+
+        .header-info h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .btn-add {
+            background-color: var(--primary-gold);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(212, 180, 84, 0.3);
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover {
+            background-color: var(--primary-gold-hover);
+        }
+
+        /* Table Card */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .filter-status {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-dropdown {
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #fff;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 30px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 20px 30px;
+            font-size: 14px;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .user-info .name {
+            font-weight: 700;
+            display: block;
+            color: var(--text-dark);
+        }
+
+        .user-info .id {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .school-cell, .canteen-cell, .contact-cell {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-active {
+            background-color: var(--active-green-bg);
+            color: var(--active-green-text);
+        }
+
+        .status-blocked {
+            background-color: var(--blocked-bg);
+            color: var(--blocked-text);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+
+        .btn-edit {
+            background-color: #fff8e6;
+            color: var(--primary-gold);
+        }
+
+        .btn-block {
+            background-color: #f8f9fa;
+            color: var(--action-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-unblock {
+            background-color: var(--primary-gold);
+            color: #fff;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-info {
+            font-size: 11px;
+            font-weight: 700;
+            color: #a0aec0;
+            text-transform: uppercase;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-gold);
+            color: #fff;
+            border-color: var(--primary-gold);
+        }
+
+        .page-dots {
+            color: #a0aec0;
+            padding: 0 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a2e;
+            color: #fff;
+            padding: 20px 50px;
+            left: 0;
+            text-align: right;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 50;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        footer span {
+            opacity: 0.7;
+        }
+
+        .mobile-menu-btn{display: none;}
+
+        @media (max-width: 992px) {
+            .menusearchbar {
+                margin-bottom: 10px !important;
+            }
+            .tabs {
+                padding-bottom: 2px;
+            }
+            .dashboard-container {
+                padding: 20px 20px;
+            }
+            header{
+                padding: 15px 20px;
+                display: block;
+                place-items: center;
+            }
+            .search-bar {
+                width: 80%;
+                margin-bottom: 10px;
+            }
+            .header-right {
+                justify-content: center;
+                width: 100%;
+            }
+            .welcome-section{
+                text-align: center;
+                display: block;
+            }
+            .welcome-text{text-align: center;margin-bottom: 10px;}
+            .top-actions {
+                justify-self: center;
+                display: block;
+            }
+            .top-actions button {width: 100%;margin-bottom: 10px;}
+            .stats-grid{
+                display: block;
+            }
+            .stat-card{
+                margin-bottom: 10px;
+            }
+            .section-header{
+                display: block;
+            }
+            .children-grid{display: block;}
+            .child-card{
+                margin-bottom: 10px;
+            }
+            .dashboard-layout{display: block;}
+            .page-header{
+                display: block;
+            }
+            .action-btns{display: block;}
+            .btn-outline{margin-bottom: 10px;}
+            .stats-grid{display: block;}
+            .stat-card{margin-bottom: 10px;}
+            .tabs-filters{display: block;}
+            .tabs{display: block;}
+            .flex {
+                display: block !important;
+            }
+            .ActionBtnTabs {
+                display: grid;
+            }
+            .tab-btn {
+                margin-bottom: 3px;
+            }
+            .w-80{width:100% !important}
+            .summary-cards{display: block;}
+            .card-order{margin-bottom: 10px;}
+            .pricing-grid{
+                display: block;
+            }
+            .pricing-card{margin-bottom: 10px;}
+            .bottom-row{display: block;}
+            .bottom-row .pricing-card{width: 100% !important;}
+            .btn{width: 100%;}
+            .transaction-header{display: block;}
+            .recent-order-grid{display: block !important;}
+            .tabs{display: block !important;}
+            .category-section .tab.active{margin: 0 !important;}
+            .menusearchbar{float: none !important;}
+            .category-icons{display: block !important;}
+            .category-item{width: 100% !important;}
+            .menu-grid{display: block !important;}
+            .main-layout{display: block;margin-left: auto !important;}
+            .container{padding: 20px !important;}
+            .alertcard-header{display: block !important;}
+            .setting-item{display: block !important;}
+            .alertcard{display: block !important;}
+            .alertcard div{display: block !important;}
+            .filters{display: block !important;}
+            .filters button{width: 100%;}
+            .calendar-header{display: block !important;}
+            .calendar-legend{display: block !important;}
+            .calendar-grid{display: block !important;}
+
+            aside {
+            transform: translateX(-100%);
+            height: 100% !important;
+            }
+
+            aside.active {
+                transform: translateX(0);
+                width: 100%;
+            }
+            .mobile-menu-open{overflow: hidden;}
+
+            .logo-icon img {
+                display: none;
+            }
+            .logo-icon{margin-bottom: 50px;}
+            .logo-container {
+                padding: 0 20px 20px !important;
+            }
+            nav ul li a{padding: 10px !important;}
+
+            /* Floating mobile menu button */
+            .mobile-menu-btn {
+                position: fixed;
+                left: 15px;
+                top: 15px;
+                z-index: 1001;
+                font-size: 12px;
+                background: #fff;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 16px 4px !important;
+                cursor: pointer;
+                display: block !important;
+            }
+
+            /* Overlay effect */
+            main.mobile-menu-open::after {
+                content: '';
+                position: fixed;
+                left: 0; top: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 998;
+            }
+            main{margin-left: 0 !important;}
+            .transactions-section{overflow: auto;}
+            .search-bar{justify-self: right;}
+            body{display: block !important;}
+            header{
+                position: sticky;
+                top: 0;
+                z-index: 99;
+            }
+            header {
+                padding: 15px 20px;
+                display: block;
+                place-items: center;
+                height: auto !important;
+            }
+            .topbarset .icon-btn {
+                display: flex !important;
+                position: absolute;
+                right: 15px;
+            }
+            .topbarset {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+            .search-container {
+                margin-left: 26px;
+                justify-self: right;
+                width: 80% !important;
+                float: right;
+                margin-bottom: 15px;
+            }
+            .search-container input {
+                width: 90%;
+            }
+            .content-area{margin: 20px;}
+            .tableresponsive .tableborder tr, th, td{white-space: nowrap;}
+            .content-wrapper{padding: 20px;}
+            .btn-add{margin-top: 10px;}
+            .header-section h1 {
+                font-size: 23px !important;
+            }
+            .content-area{padding: 0 !important;}
+            .content-wrapper{padding: 20px !important;}
+            .menu-card{margin-bottom: 10px;}
+            footer{text-align:center !important;}
+            .page-title{font-size:23px !important;}
+            
+        }
+
+         @media (min-width: 992px) and (max-width: 1300px) {
+            .category-item {width: auto !important;}
+            .menu-grid{
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .recent-order-grid{
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+            .category-item {
+                width: 60px !important;
+            }
+         }
+
+        @media (max-width: 650px) {
+        
+        }
+
+        @media (min-width: 993px) {
+            .child-card {
+                transition: all 0.3s ease;
+            }
+            .child-card:hover {
+                transform: translateY(-5px);
+                border: 2px solid #d0b04e;
+                background: #e1c67626;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .order-card{
+                transition: all 0.3s ease;
+            }
+            .order-card:hover{
+                transition: all 0.3s ease;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .category-item{
+                transition: all 0.3s ease;
+            }
+            .category-item:hover{
+                background-color: #d4b055;
+                border-color: #d4b055;
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .menu-card{
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .menu-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .newtopup a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .newtopup a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c9a758;
+                color: white;
+            }
+            .orderButton{
+                transition: all 0.3s ease;
+            }
+            .orderButton:hover{
+                transform: translateY(-5px);
+                /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
+                background: #c9a758;
+            }
+            .actions-cell a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .actions-cell a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                color: white;
+            }
+            .page-btn{
+                transition: all 0.3s ease;
+            }
+            .page-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .filter-btn{
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c6a752;
+                color: white;
+            }
+            .btn-outline{
+                transition: all 0.3s ease;
+            }
+            .btn-outline:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-primary{
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.sarah{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.sarah:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.alex{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.alex:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn {
+                transition: all 0.3s ease !important;
+            }
+            .btn-secondary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .schedule-card .meal-item{
+                transition: all 0.3s ease;
+            }
+            .schedule-card .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #e5d5a1;
+            }
+            .tab-btn:hover {
+                border-bottom: 3px solid #c9a758;
+            }
+            .calendar-day .meal-item{
+                transition: all 0.3s ease;
+            }
+            .calendar-day .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .day-actions .btn-action{
+                transition: all 0.3s ease;
+            }
+            .day-actions .btn-action:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .stat-card{
+                transition: all 0.3s ease;
+            }
+            .stat-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .balance-pill{
+                transition: all 0.3s ease;
+            }
+            .balance-pill:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-card{
+                transition: all 0.3s ease;
+            }
+            .meal-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #c9a758;
+            }
+            .icon-btn{
+                transition: all 0.3s ease;
+            }
+            .icon-btn:hover{
+                animation: bounce 0.4s;
+            }
+            @keyframes bounce {
+                0%   { transform: translateY(0); }
+                30%  { transform: translateY(-6px); }
+                60%  { transform: translateY(3px); }
+                100% { transform: translateY(0); }
+            }
+            .ActionBtnTabs .tab-btn.active {
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .ActionBtnTabs .tab-btn{
+                border: 1px solid #ccc !important;
+                transition: all 0.3s ease;
+            }
+            
+            .ActionBtnTabs .tab-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #111827;
+                color:white;
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .quick-pay-btn{
+                transition: all 0.3s ease;
+            }
+            .quick-pay-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card-order{
+                transition: all 0.3s ease;
+            }
+            .card-order:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .action-btn{
+                transition: all 0.3s ease;
+            }
+            .action-btn:hover{
+                transform: translateY(-5px);
+            }
+            .page-num{
+                transition: all 0.3s ease;
+            }
+            .page-num:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #eec218;
+                color: white;
+            }
+            .section-header .view-link:hover{
+                color: #ebaa12;
+            }
+            .order-card .btn-reorder:hover{
+                background-color: #c9a758;
+            }
+            .confirm-order:hover{
+                background-color: #c9a758;
+            }
+            .btn-add-order{
+                background-color: #e1c98d !important;
+            }
+            .btn-add-order:hover{
+                background-color: #c9a758 !important;
+            }
+            .pencilcolor svg{
+                transition: all 0.3s ease;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .meal-actions .remove-meal:hover{
+                animation: bounce 0.4s;
+            }
+            .btn-cancel{
+                transition: all 0.3s ease;
+            }
+            .btn-cancel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white;
+            }
+            .btn-save{
+                transition: all 0.3s ease;
+            }
+            .btn-save:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btnarrow:hover{
+                color: #996d00;
+            }
+            #prevMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            #nextMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            .topupsetcolor{
+                transition: all 0.3s ease;
+            }
+            .topupsetcolor:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .plus:hover{
+                background-color: #996d00;
+            }
+            .minus:hover{
+                background-color: #996d00;
+            }
+            nav ul li a:hover:not(.active) {
+                background: linear-gradient(90deg, #d4af37, #e5d5a1);
+                color:white;
+            }
+            .upload-box{
+                transition: all 0.3s ease;
+            }
+            .upload-box:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .btn-upload:hover{
+                background-color: #c9a758;
+                color: white;
+            }
+            .buttonanchar{
+                transition: all 0.3s ease;
+            }
+            .buttonanchar:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-add{
+                transition: all 0.3s ease;
+            }
+            .btn-add:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-block{
+                transition: all 0.3s ease;
+            }
+            .btn-block:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                color: white;
+            }
+            .btn-submit{
+                transition: all 0.3s ease !important;
+            }
+            .btn-submit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .save-btn-alert{
+                transition: all 0.3s ease;
+            }
+            .save-btn-alert:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-change{
+                transition: all 0.3s ease;
+                color: white;
+            }
+            .btn-change:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .child-alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .child-alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+        }
+
+        
+
+        .menu-icon{
+    width: 25px;
+    height: 2px;
+    background: #000;
+    display: block;
+    position: relative;
+    transition: 0.3s;
+}
+
+.menu-icon::before,
+.menu-icon::after{
+    content: "";
+    position: absolute;
+    width: 25px;
+    height: 2px;
+    background: #000;
+    left: 0;
+    transition: 0.3s;
+}
+
+.menu-icon::before{
+    top: -8px;
+}
+
+.menu-icon::after{
+    top: 8px;
+}
+
+/* ✅ WHEN ACTIVE → CROSS */
+.mobile-menu-btn.active .menu-icon{
+    background: transparent;
+}
+
+.mobile-menu-btn.active .menu-icon::before{
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.mobile-menu-btn.active .menu-icon::after{
+    top: 0;
+    transform: rotate(-45deg);
+} 
+
+
+    </style>
+
+
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+<script>
+$(document).ready(function(){
+
+    $('.mobile-menu-btn').click(function(e){
+        e.stopPropagation();
+
+        $('aside').toggleClass('active');
+        $('body').toggleClass('mobile-menu-open');
+
+        // ✅ TOGGLE BUTTON STATE
+        $(this).toggleClass('active');
+    });
+
+    $(document).click(function(e){
+        if(!$(e.target).closest('aside, .mobile-menu-btn').length){
+
+            $('aside').removeClass('active');
+            $('body').removeClass('mobile-menu-open');
+
+            // ✅ RESET ICON
+            $('.mobile-menu-btn').removeClass('active');
+        }
+    });
+
+});
+</script><body>
+    <button class="mobile-menu-btn">
+    <span class="menu-icon"></span>
+</button>
+    <aside>
+        <div class="logo-container">
+            <div class="logo-icon">
+                <a href="index.html">
+                    <img src="Parents/images/canteen_logo.png">
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                                <li><a href="canteenmanagerdashboard.html" class="">Dashboard</a></li>
+                <li><a href="canteenmanagermenu.html" class="">Add Menu</a></li>
+                <li><a href="canteenmanagerdirector.html" class="active">Canteen Manager Directory</a></li>
+                <li><a href="canteen_managementregistration.html" class="">Canteen Manager Registration</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+
+<style>
+.logo-icon a {
+    display: block;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+.logoutactive {
+        border: 1px solid #d1b02d;
+    }
+    .logoutactive:hover {
+        background: #d4b454 !important;
+        color: white !important;
+    }
+</style>    <style>
+        .btn-add{text-decoration: none;}
+        .actions-cell a{text-decoration: none;}
+        .topheader {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        .search-box .fa-magnifying-glass {
+            position: absolute;
+            top: 11px;
+            left: 10px;
+        }
+        
+        @media (min-width: 993px) {
+            main{overflow: hidden;}
+        }
+        @media (max-width: 992px) {
+            .topheader{display: block;}
+            .tableresponsive{overflow: auto;}
+            .header-info h1 {
+                font-size: 25px;
+            }
+            main {
+                padding-bottom: 60px !important;
+            }
+            
+        }
+        @media (max-width: 680px) {
+            .card-header{display: block;}
+            .filter-status {
+                margin-top: 20px;
+            }
+            .pagination-container{display: block;justify-items: center;}
+            .pagination-info{margin-bottom: 10px;}
+        }
+    </style>
+
+    <main>
+        <header>
+    <div class="topbarset">
+        <div class="search-container">
+            <i class="fa-solid fa-search searchmenu"></i>
+            <input type="text" placeholder="What do you want eat today...">
+        </div>
+        <a href="canteenmanagerdashboard.html">
+            <div class="icon-btn">
+                <i class="fa-solid fa-home"></i>
+            </div>
+        </a>
+    </div>
+    <!-- <div class="header-right">
+        <div class="date-time">
+            <span class="time">12:45 PM</span>
+            <span class="date">Oct 24 2025</span>
+        </div>
+        <div class="icon-btn">
+            <i class="fa-regular fa-bell"></i>
+            <div class="notification-dot"></div>
+        </div>
+        <a href="javascript:;">
+            <div class="icon-btn">
+                <i class="fa-solid fa-cog"></i>
+            </div>
+        </a>
+    </div> -->
+</header>
+
+<style>
+.searchbox {
+    position: absolute;
+    margin: 12px;
+    align-self: center;
+    color: black;
+}
+</style>
+        <div class="topheader">
+        
+            <div class="header-info">
+                <h1>Canteen Manager Directory</h1>
+                <p>Centralized control panel for managing authorized canteen personnel across all institutional branches.</p>
+            </div>
+            <a href="canteenaddmanager.html?AddManager=1" class="btn-add">
+                <i class="fa-solid fa-user-plus"></i> ADD MANAGER
+            </a>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search by name or email...">
+                </div>
+                <div class="filter-status">
+                    FILTER STATUS:
+                    <div class="filter-dropdown">All Managers</div>
+                </div>
+            </div>
+
+            <div class="tableresponsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>School</th>
+                            <th>Canteen Name</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1 -->
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="user-avatar">
+                                    <div class="user-info">
+                                        <span class="name">John Doe</span>
+                                        <span class="id">ID: MNG-8842</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="school-cell">Lincoln High School</td>
+                            <td class="canteen-cell">Central Cafeteria</td>
+                            <td class="contact-cell">john.doe@edu.com</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="canteenaddmanager.html?AddManager=2" class="btn-action btn-edit"><i class="fa-solid fa-pencil"></i> Edit</a>
+                                    <button class="btn-action btn-block"><i class="fa-solid fa-ban"></i> Block</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Smith" class="user-avatar">
+                                    <div class="user-info">
+                                        <span class="name">Sarah Smith</span>
+                                        <span class="id">ID: MNG-8845</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="school-cell">Westside Middle</td>
+                            <td class="canteen-cell">East Wing Hub</td>
+                            <td class="contact-cell">s.smith@school.edu</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="canteenaddmanager.html?AddManager=2" class="btn-action btn-edit"><i class="fa-solid fa-pencil"></i> Edit</a>
+                                    <button class="btn-action btn-block"><i class="fa-solid fa-ban"></i> Block</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Robert Brown" class="user-avatar">
+                                    <div class="user-info">
+                                        <span class="name">Robert Brown</span>
+                                        <span class="id">ID: MNG-8830</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="school-cell" style="color: #a0aec0;">Central Elementary</td>
+                            <td class="canteen-cell" style="color: #a0aec0;">Cafeteria A</td>
+                            <td class="contact-cell" style="color: #a0aec0;">r.brown@school.edu</td>
+                            <td><span class="status-badge status-blocked">Blocked</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="canteenaddmanager.html?AddManager=2" class="btn-action btn-edit"><i class="fa-solid fa-pencil"></i> Edit</a>
+                                    <button class="btn-action btn-unblock"><i class="fa-solid fa-circle-check"></i> Unblock</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Row 4 -->
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Davis" class="user-avatar">
+                                    <div class="user-info">
+                                        <span class="name">Emily Davis</span>
+                                        <span class="id">ID: MNG-8891</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="school-cell">Riverdale Academy</td>
+                            <td class="canteen-cell">North Canteen</td>
+                            <td class="contact-cell">e.davis@school.edu</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="canteenaddmanager.html?AddManager=2" class="btn-action btn-edit"><i class="fa-solid fa-pencil"></i> Edit</a>
+                                    <button class="btn-action btn-block"><i class="fa-solid fa-ban"></i> Block</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                <div class="pagination-info">Page 1 of 32 — Total 128 Managers</div>
+                <div class="pagination-controls">
+                    <div class="page-btn"><i class="fa-solid fa-chevron-left"></i></div>
+                    <div class="page-btn active">01</div>
+                    <div class="page-btn">02</div>
+                    <div class="page-btn">03</div>
+                    <div class="page-dots">...</div>
+                    <div class="page-btn"><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+        Design and Develop By RSI Concepts
+    </footer>
+
+    </main>
+
+</body>
+</html>

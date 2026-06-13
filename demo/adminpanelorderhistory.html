@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Head Office Dashboard</title>
+    
+        <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <!-- SheetJS for Excel export -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --primary-gold: #d4b454;
+                --primary-gold-hover: #c4a444;
+                --bg-light: #f8f9fa;
+                --text-dark: #1a1a2e;
+                --text-muted: #6c757d;
+                --sidebar-width: 260px;
+                --border-color: #eef0f2;
+                --active-green-bg: #e6f4ea;
+                --active-green-text: #34a853;
+                --blocked-bg: #f1f3f4;
+                --blocked-text: #5f6368;
+                --action-dark: #344767;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', sans-serif;
+            }
+
+            body {
+                background-color: var(--bg-light);
+                display: flex;
+                min-height: 100vh;
+                color: var(--text-dark);
+            }
+
+            /* Sidebar */
+            aside {
+                width: var(--sidebar-width);
+                background-color: #fff;
+                border-right: 1px solid var(--border-color);
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                height: 100%;
+                z-index: 100;
+            }
+
+            .logo-container {
+                padding: 0 30px 40px 30px;
+                text-align: center;
+            }
+
+            .logo-icon {
+                font-size: 40px;
+                color: var(--primary-gold);
+                margin-bottom: 10px;
+                display: block;
+            }
+
+            .logo-text {
+                font-weight: 800;
+                font-size: 18px;
+                color: var(--primary-gold);
+                line-height: 1.1;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            nav ul {
+                list-style: none;
+            }
+
+            nav ul li {
+                margin-bottom: 5px;
+                padding: 0 15px;
+            }
+
+            nav ul li a {
+                text-decoration: none;
+                color: var(--text-muted);
+                font-size: 14px;
+                font-weight: 500;
+                padding: 12px 20px;
+                display: block;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+
+            nav ul li a.active {
+                background-color: var(--primary-gold);
+                color: #fff;
+            }
+
+            nav ul li a:hover:not(.active) {
+                background-color: #f0f0f0;
+                color: var(--text-dark);
+            }
+
+            /* Main Content Styles */
+            .main-content {
+                flex-grow: 1;
+                padding: 40px;
+                overflow-y: auto;
+                margin-left: 260px;
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 30px;
+            }
+
+            .header-title h1 {
+                font-size: 28px;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+            .header-title p {
+                color: var(--text-muted);
+                font-size: 14px;
+            }
+
+            .header-actions {
+                display: flex;
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                border: none;
+                transition: 0.2s;
+            }
+
+            .btn-white {
+                background-color: var(--white);
+                color: var(--text-main);
+                border: 1px solid var(--border-color);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+
+            .btn-gold {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+            }
+
+            .btn-gold:hover {
+                background-color: var(--primary-gold-hover);
+            }
+
+            /* Tabs Styles */
+            .tabs-container {
+                background-color: var(--white);
+                border-radius: 12px 12px 0 0;
+                border-bottom: 1px solid var(--border-color);
+                margin-bottom: 20px;
+                display: flex;
+                padding: 0 20px;
+            }
+
+            .tab {
+                padding: 20px 15px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-muted);
+                cursor: pointer;
+                position: relative;
+                white-space: nowrap;
+            }
+
+            .tab.active {
+                color: var(--text-main);
+            }
+
+            .tab.active::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background-color: var(--primary-gold);
+            }
+
+            /* Filter Section */
+            .filters-card {
+                background-color: var(--white);
+                border-radius: 12px;
+                padding: 25px;
+                margin-bottom: 30px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+                border: 1px solid var(--border-color);
+            }
+
+            .filters-grid {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            .filter-group label {
+                display: block;
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                margin-bottom: 8px;
+                letter-spacing: 0.5px;
+            }
+
+            .input-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+            .input-wrapper i {
+                position: absolute;
+                left: 12px;
+                color: var(--text-muted);
+                font-size: 14px;
+            }
+
+            .input-wrapper input, .input-wrapper select {
+                width: 100%;
+                padding: 10px 10px 10px 35px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 14px;
+                color: var(--text-main);
+                background-color: #fafafa;
+                outline: none;
+            }
+
+            .input-wrapper select {
+                appearance: none;
+            }
+
+            .filter-actions {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .clear-btn {
+                background-color: #d4af37 !important;
+                color: white !important;
+                padding: 7px 25px;
+                border-radius: 8px;
+                border: none;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .apply-btn {
+                background-color: #d4af37 !important;
+                color: white !important;
+                padding: 8px 25px;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 13px;
+                border: none;
+                cursor: pointer;
+            }
+
+            /* Table Styles */
+            .table-card {
+                background-color: var(--white);
+                border-radius: 12px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+                border: 1px solid var(--border-color);
+                overflow: hidden;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: left;
+                padding: 15px 20px;
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border-color);
+                background-color: #fdfdfd;
+            }
+
+            td {
+                padding: 15px 20px;
+                font-size: 14px;
+                border-bottom: 1px solid var(--border-color);
+                vertical-align: middle;
+            }
+
+            .order-id {
+                color: var(--text-gold);
+                font-weight: 700;
+            }
+
+            .student-cell {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background-color: #f0f0f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--text-muted);
+            }
+
+            .student-name {
+                font-weight: 600;
+            }
+
+            .class-text {
+                color: var(--text-muted);
+            }
+
+            .badge-item {
+                background-color: #f5f5f5;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                margin-right: 5px;
+                border: 1px solid #eee;
+            }
+
+            .badge-more {
+                color: var(--text-muted);
+                font-size: 12px;
+            }
+
+            .amount {
+                font-weight: 700;
+            }
+
+            .status-badge {
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 700;
+                display: inline-block;
+            }
+
+            .status-completed {
+                background-color: var(--success-bg);
+                color: var(--success-text);
+            }
+
+            .status-cancelled {
+                background-color: var(--danger-bg);
+                color: var(--danger-text);
+            }
+
+            .action-icon {
+                color: var(--text-gold);
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+            /* Pagination */
+            .pagination-container {
+                padding: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .pagination-info {
+                font-size: 13px;
+                color: var(--text-muted);
+            }
+
+            .pagination-info span {
+                font-weight: 700;
+                color: var(--text-main);
+            }
+
+            .pagination-info .count-text {
+                color: var(--text-gold);
+                font-weight: 700;
+            }
+
+            .pagination-controls {
+                display: flex;
+                gap: 8px;
+            }
+
+            .page-btn {
+                padding: 8px 15px;
+                border: 1px solid var(--border-color);
+                background-color: var(--white);
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                color: var(--text-main);
+            }
+
+            .page-num {
+                width: 35px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .page-num.active {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border-color: var(--primary-gold);
+            }
+
+            /* Footer */
+            footer {
+                background-color: #222;
+                color: #888;
+                padding: 15px 40px;
+                text-align: right;
+                font-size: 12px;
+                width: 100%;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                z-index: 100;
+            }
+
+            .main-wrapper {
+                display: flex;
+                width: 100%;
+                margin-bottom: 45px; /* space for footer */
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 1200px) {
+                .filters-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            }
+        </style>
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #fcfcfc;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        aside {
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-container {
+            padding: 0 30px 40px;
+            text-align: center;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 14px;
+            color: #d4af37;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            padding: 5px 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #777;
+            font-size: 13px;
+            font-weight: 500;
+            display: block;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        nav ul li a.active {
+            background: linear-gradient(90deg, #e2c06d, #c5a044);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(197, 160, 68, 0.3);
+        }
+
+        /* Main Content Styles */
+        main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+        .logo {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+        nav ul li {
+            margin-bottom: 5px;
+            padding: 0 15px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #7d7d7d;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 20px;
+            display: block;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        aside{
+            padding: 20px 0;
+        }
+        /* main{width: 75% !important;} */
+
+        @media (min-width: 993px) {
+            .child-card {
+                transition: all 0.3s ease;
+            }
+            .child-card:hover {
+                transform: translateY(-5px);
+                border: 2px solid #d0b04e;
+                background: #e1c67626;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .order-card{
+                transition: all 0.3s ease;
+            }
+            .order-card:hover{
+                transition: all 0.3s ease;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .category-item{
+                transition: all 0.3s ease;
+            }
+            .category-item:hover{
+                background-color: #d4b055;
+                border-color: #d4b055;
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .menu-card{
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .menu-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .newtopup a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .newtopup a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c9a758;
+                color: white;
+            }
+            .orderButton{
+                transition: all 0.3s ease;
+            }
+            .orderButton:hover{
+                transform: translateY(-5px);
+                /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
+                background: #c9a758;
+            }
+            .actions-cell a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .actions-cell a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                color: white;
+            }
+            .page-btn{
+                transition: all 0.3s ease;
+            }
+            .page-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .filter-btn{
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c6a752;
+                color: white;
+            }
+            .btn-outline{
+                transition: all 0.3s ease !important;
+            }
+            .btn-outline:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-primary{
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.sarah{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.sarah:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.alex{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.alex:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn {
+                transition: all 0.3s ease !important;
+            }
+            .btn-secondary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .schedule-card .meal-item{
+                transition: all 0.3s ease;
+            }
+            .schedule-card .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #e5d5a1;
+            }
+            .tab-btn:hover {
+                border-bottom: 3px solid #c9a758;
+            }
+            .calendar-day .meal-item{
+                transition: all 0.3s ease;
+            }
+            .calendar-day .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .day-actions .btn-action{
+                transition: all 0.3s ease;
+            }
+            .day-actions .btn-action:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .stat-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .stat-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .balance-pill{
+                transition: all 0.3s ease;
+            }
+            .balance-pill:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-card{
+                transition: all 0.3s ease;
+            }
+            .meal-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #c9a758;
+            }
+            .icon-btn{
+                transition: all 0.3s ease;
+            }
+            .icon-btn:hover{
+                animation: bounce 0.4s;
+            }
+            @keyframes bounce {
+                0%   { transform: translateY(0); }
+                30%  { transform: translateY(-6px); }
+                60%  { transform: translateY(3px); }
+                100% { transform: translateY(0); }
+            }
+            .ActionBtnTabs .tab-btn.active {
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .ActionBtnTabs .tab-btn{
+                border: 1px solid #ccc !important;
+                transition: all 0.3s ease;
+            }
+            
+            .ActionBtnTabs .tab-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #111827;
+                color:white;
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .quick-pay-btn{
+                transition: all 0.3s ease;
+            }
+            .quick-pay-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card-order{
+                transition: all 0.3s ease;
+            }
+            .card-order:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .action-btn{
+                transition: all 0.3s ease;
+            }
+            .action-btn:hover{
+                transform: translateY(-5px);
+                color: #d4af37;
+            }
+            .page-num{
+                transition: all 0.3s ease;
+            }
+            .page-num:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #eec218;
+                color: white;
+            }
+            .section-header .view-link:hover{
+                color: #ebaa12;
+            }
+            .order-card .btn-reorder:hover{
+                background-color: #c9a758;
+            }
+            .confirm-order:hover{
+                background-color: #c9a758;
+            }
+            .btn-add-order{
+                background-color: #e1c98d !important;
+            }
+            .btn-add-order:hover{
+                background-color: #c9a758 !important;
+            }
+            .pencilcolor svg{
+                transition: all 0.3s ease;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .meal-actions .remove-meal:hover{
+                animation: bounce 0.4s;
+            }
+            .btn-cancel{
+                transition: all 0.3s ease;
+            }
+            .btn-cancel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btn-save{
+                transition: all 0.3s ease;
+            }
+            .btn-save:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btnarrow:hover{
+                color: #996d00;
+            }
+            #prevMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            #nextMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            .topupsetcolor{
+                transition: all 0.3s ease;
+            }
+            .topupsetcolor:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .plus:hover{
+                background-color: #996d00;
+            }
+            .minus:hover{
+                background-color: #996d00;
+            }
+            nav ul li a:hover:not(.active) {
+                background: linear-gradient(90deg, #d4af37, #e5d5a1);
+                color:white;
+            }
+            .upload-box{
+                transition: all 0.3s ease;
+            }
+            .upload-box:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #d4af37;
+            }
+            .btn-upload:hover{
+                background-color: #c9a758;
+                color: white;
+            }
+            .buttonanchar{
+                transition: all 0.3s ease !important;
+            }
+            .buttonanchar:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-add{
+                transition: all 0.3s ease !important;
+            }
+            .btn-add:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-block{
+                transition: all 0.3s ease !important;
+            }
+            .btn-block:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                /* border: 1px solid #d4af37; */
+                color: white;
+            }
+            .btn-submit{
+                transition: all 0.3s ease !important;
+            }
+            .btn-submit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .view-all-link:hover{
+                color: #996d00;
+            }
+            .panel{
+                transition: all 0.3s ease !important;
+            }
+            .panel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+
+            .save-btn-alert{
+                transition: all 0.3s ease;
+            }
+            .save-btn-alert:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-change{
+                transition: all 0.3s ease;
+                color: white;
+            }
+            .btn-change:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .child-alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .child-alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .add-student-btn{
+                transition: all 0.3s ease !important;
+            }
+            .add-student-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .submit-btn{
+                transition: all 0.3s ease !important;
+            }
+            .submit-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btn-register{
+                transition: all 0.3s ease !important;
+            }
+            .btn-register:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+                border: 2px solid #b08e30 !important;
+            }
+            .btn-gold{
+                transition: all 0.3s ease !important;
+                color: white !important;
+            }
+            .btn-gold:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-apply{
+                transition: all 0.3s ease !important;
+            }
+            .btn-apply:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .chart-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .chart-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            /* .table-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .table-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            } */
+            .search-box .fa-magnifying-glass {
+                position: absolute;
+                align-self: center;
+                left: 2px;
+            }
+
+            .btn-export{
+                transition: all 0.3s ease !important;
+            }
+            .btn-export:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-approve-all{
+                transition: all 0.3s ease !important;
+            }
+            .btn-approve-all:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-reject{
+                transition: all 0.3s ease !important;
+            }
+            .btn-reject:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #d4af37 !important;
+                border: 1px solid #d4af37;
+                color: white !important;
+            }
+            .btn-approve{
+                transition: all 0.3s ease !important;
+            }
+            .btn-approve:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #d4af37 !important;
+                color: white !important;
+            }
+
+            .tab.active{
+                background-color: #f0c418 !important;
+                color: white !important;
+            }
+            .tab:hover{
+                background-color: #f0c418;
+                color: white;
+                margin: auto 2px;
+            }
+            .orders-panel{
+                transition: all 0.3s ease !important;
+            }
+            .orders-panel:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .btn-white{
+                transition: all 0.3s ease !important;
+            }
+            .btn-white:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #cfa84e !important;
+                color: white !important;
+            }
+            
+
+            .clear-btn{
+                transition: all 0.3s ease !important;
+            }
+            .clear-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+
+            .apply-btn{
+                transition: all 0.3s ease !important;
+            }
+            .apply-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .fa-eye{
+                transition: all 0.3s ease !important;
+            }
+            .fa-eye:hover{
+                transform: translateY(-5px) !important;
+                color: #b08e30 !important;
+            }
+            .list-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .list-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .kpi-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .kpi-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .reportcards{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .reportcards:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+
+            .table-body .btn-edit{
+                transition: all 0.3s ease !important;
+                display: inline-block;
+            }
+            .table-body .btn-edit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .role-icon-box{transition: all 0.3s ease !important;cursor: pointer;}
+            .role-icon-box:hover{
+                animation: bounce 0.4s;
+            }
+
+            .list-card .btn-gold:hover{
+                background: linear-gradient(90deg, #c5a044, #e2c06d);
+            }
+            
+            
+            
+            
+            
+        }
+
+        
+    </style>
+
+
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+<body>
+<style>
+    .input-wrapper svg{
+        position: absolute;
+        left: 10px;
+    }
+    .tabs-container {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .tab-content {
+    overflow: auto;
+}
+</style>
+    <div class="main-wrapper">
+        <aside>
+    <div class="logo">
+        <div class="logo-icon">
+            <a href="index.html">
+                <img src="Parents/images/canteen_logo.png">
+            </a>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="adminpaneldashboard.html" class="">Dashboard</a></li>
+            <li><a href="adminpanelreports.html" class="">Reports</a></li>
+            <li><a href="adminpanelorderhistory.html" class="active">Order History</a></li>
+            <!-- <li><a href="adminpanelstudentmanagement.html" class="">Student Management</a></li> -->
+             <li><a href="adminpanelschoolmanagement.html" class="">School Management</a></li>
+            <li><a href="adminpanelstudentmanagement.html" class="">Student Management</a></li>
+            <li><a href="adminpanelparentsmanagement.html" class="">Parent & Teacher Management</a></li>
+            <li><a href="adminpanelcanteenmanagement.html" class="">Canteen Management</a></li>
+            <li><a href="adminpanelkitchenmanagement.html" class="">Kichen Management</a></li>
+            <!-- <li><a href="adminpanelregistrations.html" class="">Parent & Teacher Registrations</a></li> -->
+            <!-- <li><a href="adminpanelschoolregistrations.html" class="">Registrations</a></li> -->
+            <li><a href="adminpaneluserrolepermission.html" class="">User Roles & Permissions</a></li>
+            <!-- <li><a href="adminpanelsetting.html" class="">Setting</a></li> -->
+        </ul>
+    </nav>
+</aside>
+
+
+
+<style>
+    .logo{margin-bottom: 40px;}
+
+    nav ul li a.active {
+    background: linear-gradient(90deg, #e2c06d, #c5a044);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(197, 160, 68, 0.3);
+}
+.logo-icon a {
+    display: block;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+</style>
+        <main class="main-content">
+            <header class="header">
+                <div class="header-title">
+                    <h1>Advanced Order History</h1>
+                    <p>Comprehensive view of all canteen transactions with advanced filtering.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-white" id="printTable">
+                        <i class="fa-solid fa-print"></i> Print
+                    </button>
+                    <button class="btn btn-gold" id="exportTable">
+                        <i class="fa-solid fa-download"></i> Export Report
+                    </button>
+                </div>
+            </header>
+
+            
+                <nav class="tabs-container">
+                    <div class="tab active" data-tab="0">Individual Student Orders</div>
+                    <div class="tab" data-tab="1">Most Ordered Items</div>
+                    <div class="tab" data-tab="2">Grade/Class Wise Orders</div>
+                    <div class="tab" data-tab="3">Top Sellers</div>
+                    <div class="tab" data-tab="4">Canteen Wise Orders</div>
+                </nav>
+            
+            <section class="filters-card">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label>Student Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" placeholder="Search student...">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Grade/Class</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <select>
+                                <option>All Classes</option>
+                                <option>Grade 1-A</option>
+                                <option>Grade 2-A</option>
+                                <option>Grade 4-B</option>
+                                <option>Grade 5-C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date Range</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <input type="date" placeholder="mm/dd/yyyy">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Canteen</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-shop"></i>
+                            <select>
+                                <option>All Canteens</option>
+                                <option>Main Canteen</option>
+                                <option>Junior Wing</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Item Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-burger"></i>
+                            <input type="text" placeholder="Search dish...">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <a href="#" class="clear-btn">Clear All</a>
+                    <button class="apply-btn">Apply Filters</button>
+                </div>
+            </section>
+
+            <section class="table-card" id="tableWrapper">
+                <section class="tab-content active">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Items</th>
+                                <th>Amount (AED)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="order-id">#ORD-9021</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">AA</div>
+                                        <span class="student-name">Ahmed Al-Sayed</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 4-B</td>
+                                <td>
+                                    <span class="badge-item">Chicken Wrap</span>
+                                    <span class="badge-more">+1 more</span>
+                                </td>
+                                <td class="amount">24.50</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9020</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">SJ</div>
+                                        <span class="student-name">Sarah Jenkins</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 2-A</td>
+                                <td>
+                                    <span class="class-text">Apple Juice</span>
+                                </td>
+                                <td class="amount">5.00</td>
+                                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9019</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9018</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9017</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section class="tab-content">
+                    <!-- another table or content -->
+                     <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Items</th>
+                                <th>Amount (AED)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="order-id">#ORD-9021</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">AA</div>
+                                        <span class="student-name">Ahmed Al-Sayed</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 4-B</td>
+                                <td>
+                                    <span class="badge-item">Chicken Wrap</span>
+                                    <span class="badge-more">+1 more</span>
+                                </td>
+                                <td class="amount">24.50</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9020</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">SJ</div>
+                                        <span class="student-name">Sarah Jenkins</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 2-A</td>
+                                <td>
+                                    <span class="class-text">Apple Juice</span>
+                                </td>
+                                <td class="amount">5.00</td>
+                                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9019</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9018</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9017</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="tab-content">
+                    <!-- another table or content -->
+                     <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Items</th>
+                                <th>Amount (AED)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="order-id">#ORD-9021</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">AA</div>
+                                        <span class="student-name">Ahmed Al-Sayed</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 4-B</td>
+                                <td>
+                                    <span class="badge-item">Chicken Wrap</span>
+                                    <span class="badge-more">+1 more</span>
+                                </td>
+                                <td class="amount">24.50</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9020</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">SJ</div>
+                                        <span class="student-name">Sarah Jenkins</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 2-A</td>
+                                <td>
+                                    <span class="class-text">Apple Juice</span>
+                                </td>
+                                <td class="amount">5.00</td>
+                                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9019</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9018</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9017</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="tab-content">
+                    <!-- another table or content -->
+                     <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Items</th>
+                                <th>Amount (AED)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="order-id">#ORD-9021</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">AA</div>
+                                        <span class="student-name">Ahmed Al-Sayed</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 4-B</td>
+                                <td>
+                                    <span class="badge-item">Chicken Wrap</span>
+                                    <span class="badge-more">+1 more</span>
+                                </td>
+                                <td class="amount">24.50</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9020</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">SJ</div>
+                                        <span class="student-name">Sarah Jenkins</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 2-A</td>
+                                <td>
+                                    <span class="class-text">Apple Juice</span>
+                                </td>
+                                <td class="amount">5.00</td>
+                                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9019</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9018</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9017</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="tab-content">
+                    <!-- another table or content -->
+                     <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Items</th>
+                                <th>Amount (AED)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="order-id">#ORD-9021</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">AA</div>
+                                        <span class="student-name">Ahmed Al-Sayed</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 4-B</td>
+                                <td>
+                                    <span class="badge-item">Chicken Wrap</span>
+                                    <span class="badge-more">+1 more</span>
+                                </td>
+                                <td class="amount">24.50</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9020</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">SJ</div>
+                                        <span class="student-name">Sarah Jenkins</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 2-A</td>
+                                <td>
+                                    <span class="class-text">Apple Juice</span>
+                                </td>
+                                <td class="amount">5.00</td>
+                                <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9019</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9018</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="order-id">#ORD-9017</td>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar">OI</div>
+                                        <span class="student-name">Omar Ibrahim</span>
+                                    </div>
+                                </td>
+                                <td class="class-text">Grade 5-C</td>
+                                <td>
+                                    <span class="class-text">Pasta Salad, Orange</span>
+                                </td>
+                                <td class="amount">18.75</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td><i class="fa-solid fa-eye action-icon"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Showing <span>1-25</span> of <span class="count-text">1,248</span> transactions
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="page-btn">Previous</button>
+                        <div class="page-num active">1</div>
+                        <div class="page-num">2</div>
+                        <div class="page-num">3</div>
+                        <button class="page-btn">Next</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="orderModal" style="display:none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-box">
+            <h3>Order Details</h3>
+            <div class="modal-content"></div>
+            <button class="close-modal btn btn-gold">Close</button>
+        </div>
+    </div>
+
+    <footer>
+    <span>Design and Develop By RSI Concepts</span>
+</footer>
+
+
+</body>
+</html>
+<style>
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.page-num {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+.page-num.active {
+    background: #d4af37;
+    color: #fff;
+    border-radius: 6px;
+}
+#orderModal {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+}
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+}
+.modal-box {
+    position: relative;
+    width: 600px;
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+.action-icon {
+    cursor: pointer;
+}
+.close-modal{margin-top:20px !important;}
+
+</style>
+<script>
+$(document).ready(function () {
+
+    $('.tab').on('click', function () {
+        const tabIndex = $(this).data('tab');
+
+        $('.tab').removeClass('active');
+        $(this).addClass('active');
+
+        $('.tab-content').removeClass('active').hide();
+        $('.tab-content').eq(tabIndex).fadeIn(200).addClass('active');
+    });
+
+});
+</script>
+
+<script>
+$(document).ready(function () {
+
+    const rowsPerPage = 4;
+
+    function setupPagination($table) {
+        const $rows = $table.find('tbody tr');
+        let currentPage = 1;
+
+        function showPage(page) {
+            $rows.hide();
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            $rows.slice(start, end).show();
+
+            $table.closest('.table-card')
+                .find('.page-num')
+                .removeClass('active')
+                .eq(page - 1)
+                .addClass('active');
+        }
+
+        function buildPagination() {
+            const totalPages = Math.ceil($rows.length / rowsPerPage);
+            const $controls = $table.closest('.table-card')
+                .find('.pagination-controls');
+
+            $controls.find('.page-num').remove();
+
+            for (let i = 1; i <= totalPages; i++) {
+                $('<div class="page-num">' + i + '</div>')
+                    .insertBefore($controls.find('.page-btn:last'))
+                    .on('click', function () {
+                        currentPage = i;
+                        showPage(currentPage);
+                    });
+            }
+
+            showPage(1);
+        }
+
+        $table.closest('.table-card')
+            .find('.page-btn:first')
+            .on('click', function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            });
+
+        $table.closest('.table-card')
+            .find('.page-btn:last')
+            .on('click', function () {
+                const totalPages = Math.ceil($rows.length / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            });
+
+        buildPagination();
+    }
+
+    // Initialize pagination for EACH tab table
+    $('.tab-content table').each(function () {
+        setupPagination($(this));
+    });
+
+});
+</script>
+<script>
+$(document).on('click', '#printTable', function () {
+
+    const printContent = $('#tableWrapper').html();
+    const originalContent = $('body').html();
+
+    $('body').html(`
+        <html>
+        <head>
+            <title>Print Report</title>
+            <style>
+                table { width:100%; border-collapse: collapse; }
+                th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+                th { background:#f4f4f4; }
+            </style>
+        
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+        <body>${printContent}</body>
+        </html>
+    `);
+
+    window.print();
+    location.reload(); // restore page
+});
+</script>
+<script>
+$(document).on('click', '#exportTable', function () {
+
+    let csv = [];
+    $('#tableWrapper table tr').each(function () {
+        let row = [];
+        $(this).find('th, td').each(function () {
+            row.push('"' + $(this).text().trim() + '"');
+        });
+        csv.push(row.join(','));
+    });
+
+    const csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+    const downloadLink = document.createElement('a');
+
+    downloadLink.download = 'report.csv';
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.click();
+});
+</script>
+<script>
+$(document).on('click', '.action-icon', function () {
+
+    const row = $(this).closest('tr');
+
+    const orderId   = row.find('.order-id').text();
+    const student   = row.find('.student-name').text();
+    const className = row.find('.class-text').text();
+    const amount    = row.find('.amount').text();
+    const status    = row.find('.status-badge').text();
+
+    $('#orderModal .modal-content').html(`<table style="width:100%; border-collapse: collapse;">
+            <tr>
+                <th>Order ID</th>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>${orderId}</td>
+                <td>${student}</td>
+                <td>${className}</td>
+                <td>${amount}</td>
+                <td>${status}</td>
+            </tr>
+        </table>
+    `);
+
+    $('#orderModal').fadeIn();
+});
+
+$(document).on('click', '.close-modal, .modal-overlay', function () {
+    $('#orderModal').fadeOut();
+});
+</script>
