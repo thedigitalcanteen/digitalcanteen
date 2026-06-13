@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Canteen Dashboard</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="Parents/css/style.css">
+
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<!-- <link rel="stylesheet" href="Students/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script> -->
+            <style>
+            :root {
+                --primary-gold: #D4B055;
+                --dark-gray: #333333;
+                --light-bg: #F8F8F8;
+                --white: #FFFFFF;
+                --text-main: #333333;
+                --text-muted: #777777;
+                --sidebar-width: 240px;
+                --right-sidebar-width: 300px;
+                --border-radius: 12px;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            body {
+                background-color: var(--light-bg);
+                color: var(--text-main);
+                display: flex;
+                min-height: 100vh;
+            }
+
+            /* Sidebar Styles */
+            aside.left-sidebar {
+                width: var(--sidebar-width);
+                background-color: var(--white);
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid #eee;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+
+            .logo-container {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .logo-container img {
+                width: 80px;
+                margin-bottom: 10px;
+            }
+
+            .logo-text {
+                font-weight: 700;
+                font-size: 18px;
+                color: var(--primary-gold);
+                line-height: 1.1;
+                text-transform: uppercase;
+            }
+
+            nav ul {
+                list-style: none;
+            }
+
+            nav ul li {
+                margin-bottom: 10px;
+            }
+
+            nav ul li a {
+                text-decoration: none;
+                color: var(--text-muted);
+                font-size: 14px;
+                padding: 12px 15px;
+                display: block;
+                border-radius: var(--border-radius);
+                transition: all 0.3s;
+            }
+
+            nav ul li a.active {
+                background-color: var(--primary-gold);
+                color: var(--white);
+            }
+
+            nav ul li a:hover:not(.active) {
+                background-color: #f0f0f0;
+            }
+
+            .subscription-card {
+                margin-top: auto;
+                background-color: var(--dark-gray);
+                color: var(--white);
+                padding: 20px;
+                border-radius: var(--border-radius);
+                text-align: center;
+            }
+
+            .subscription-card h4 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .subscription-card p {
+                font-size: 11px;
+                color: #ccc;
+                margin-bottom: 15px;
+                line-height: 1.4;
+            }
+
+            .btn-subscribe {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                width: 100%;
+            }
+
+            /* Main Content Styles */
+            main {
+                flex-grow: 1;
+                padding: 30px;
+                overflow-y: auto;
+            }
+
+            header {
+                background-color: #333;
+                padding: 15px 40px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .search-container {
+                position: relative;
+                width: 400px;
+            }
+
+            .search-container input {
+                width: 100%;
+                padding: 12px 20px 12px 45px;
+                border-radius: 10px;
+                border: none;
+                background-color: #fff;
+                font-size: 14px;
+            }
+
+            .search-container i {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999;
+            }
+
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .balance-card {
+                text-align: center;
+                background-color: #d4af37;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: auto;
+            }
+
+            .balance-label {
+                font-size: 10px;
+                text-transform: capitalize;
+                font-weight: 600;
+                display: block;
+                margin-bottom: 2px;
+            }
+
+            .balance-amount {
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .icon-btn {
+                background-color: #fff;
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #333;
+                cursor: pointer;
+                position: relative;
+            }
+
+            .notification-dot {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 8px;
+                height: 8px;
+                background-color: #ff4d4d;
+                border-radius: 50%;
+                border: 2px solid #fff;
+            }
+
+            .search-bar {
+                    background-color: white;
+                    border-radius: 10px;
+                    padding: 8px 15px;
+                    display: flex;
+                    align-items: center;
+                    width: 400px;
+            }
+
+            .search-bar input {
+                border: none;
+                outline: none;
+                margin-left: 10px;
+                width: 100%;
+                font-size: 14px;
+            }
+
+            .search-bar i {
+                color: var(--primary-gold);
+            }
+
+            .header-right {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            /* Recent Order Section */
+            .recent-order-container {
+                background-color: var(--primary-gold);
+                border-radius: 20px;
+                padding: 20px;
+                margin-bottom: 30px;
+                margin-top: 30px;
+            }
+
+            .recent-order-container h2 {
+                color: var(--white);
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .recent-order-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+            }
+
+            .order-card {
+                background-color: var(--white);
+                border-radius: 15px;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .order-card img {
+                width: 100%;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+
+            .order-meta {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+
+            .order-meta span {
+                font-size: 9px;
+                background-color: #f0f0f0;
+                padding: 2px 8px;
+                border-radius: 4px;
+                color: var(--text-muted);
+            }
+
+            .order-card h3 {
+                font-size: 13px;
+                margin-bottom: 5px;
+            }
+
+            .order-card p {
+                font-size: 9px;
+                color: var(--text-muted);
+                margin-bottom: 10px;
+                line-height: 1.3;
+            }
+
+            .order-card .price {
+                font-weight: 700;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .btn-reorder {
+                background-color: #444;
+                color: var(--white);
+                border: none;
+                padding: 8px;
+                border-radius: 6px;
+                font-size: 12px;
+                cursor: pointer;
+                width: 100%;
+                text-align: center;
+                text-decoration: none;
+            }
+
+            /* Tabs & Category Section */
+            .category-section {
+                background-color: var(--white);
+                border-radius: 20px;
+                padding: 0;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            }
+
+            .tabs {
+                display: flex;
+                background-color: #444;
+            }
+
+            .tab {
+                padding: 15px 30px;
+                color: var(--white);
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 15px;
+            }
+
+            .tab.active {
+                background-color: #555;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+            }
+
+            .category-content {
+                padding: 25px;
+            }
+
+            .category-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .category-header h2 {
+                font-size: 18px;
+            }
+
+            .view-all {
+                color: var(--primary-gold);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .category-icons {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 30px;
+            }
+
+            .category-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100px;
+                height: 110px;
+                border: 1px solid #eee;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .category-item.active {
+                background-color: var(--primary-gold);
+                border-color: var(--primary-gold);
+                color: var(--white);
+            }
+
+            .category-item img {
+                width: 40px;
+                margin-bottom: 10px;
+            }
+
+            .category-item span {
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .menu-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            .menu-card {
+                border: 1px solid #eee;
+                border-radius: 15px;
+                padding: 15px;
+            }
+
+            .menu-card img {
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+
+            .menu-card h3 {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+
+            .menu-card p {
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+            }
+
+            .menu-card .price {
+                font-weight: 700;
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+
+            .btn-add-order {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                width: 100%;
+            }
+
+            /* Right Sidebar Styles */
+            aside.right-sidebar {
+                width: var(--right-sidebar-width);
+                background-color: var(--white);
+                padding: 20px;
+                border-left: 1px solid #eee;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .user-actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .balance-badge {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                padding: 8px 15px;
+                border-radius: 8px;
+                font-size: 12px;
+            }
+
+            .balance-badge span {
+                display: block;
+                font-size: 10px;
+                opacity: 0.8;
+            }
+
+            .icon-btns {
+                display: flex;
+                gap: 10px;
+            }
+
+            .icon-btn {
+                width: 35px;
+                height: 35px;
+                background-color: #f0f0f0;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-main);
+                cursor: pointer;
+            }
+
+            .order-summary-box {
+                background-color: var(--white);
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                overflow: hidden;
+                margin-bottom: 25px;
+            }
+
+            .summary-header {
+                background-color: var(--dark-gray);
+                color: var(--white);
+                padding: 15px;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .summary-items {
+                padding: 15px;
+            }
+
+            .summary-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .summary-item img {
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                object-fit: cover;
+                margin-right: 12px;
+            }
+
+            .summary-item-info {
+                flex-grow: 1;
+            }
+
+            .summary-item-info h4 {
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+
+            .summary-item-info span {
+                font-size: 10px;
+                color: var(--text-muted);
+            }
+
+            .summary-item-price {
+                font-size: 12px;
+                font-weight: 600;
+                text-align: right;
+            }
+
+            .summary-total {
+                padding: 15px;
+                border-top: 1px dashed #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .summary-total h3 {
+                font-size: 18px;
+            }
+
+            .summary-total .total-price {
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .btn-checkout {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 12px;
+                border-radius: 10px;
+                width: calc(100% - 30px);
+                margin: 0 15px 15px 15px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .weekly-plan-box {
+                background-color: var(--dark-gray);
+                border-radius: 15px;
+                padding: 15px;
+                color: var(--white);
+            }
+
+            .weekly-plan-box h3 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+
+            .weekly-plan-box p {
+                font-size: 10px;
+                color: #aaa;
+                margin-bottom: 15px;
+            }
+
+            .calendar-strip {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+
+            .day {
+                text-align: center;
+            }
+
+            .day span {
+                display: block;
+                font-size: 9px;
+                margin-bottom: 5px;
+            }
+
+            .day .dot {
+                width: 4px;
+                height: 4px;
+                background-color: var(--primary-gold);
+                border-radius: 50%;
+                margin: 0 auto;
+            }
+
+            .weekly-item {
+                display: flex;
+                justify-content: space-between;
+                font-size: 11px;
+                margin-bottom: 15px;
+            }
+
+            .weekly-item span:last-child {
+                color: var(--primary-gold);
+                font-weight: 600;
+            }
+
+            .btn-plan {
+                background-color: var(--primary-gold);
+                color: var(--white);
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                width: 100%;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+            }
+
+            footer {
+                position: relative;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #222;
+                color: #888;
+                text-align: right;
+                padding: 20px 40px;
+                font-size: 12px;
+                z-index: 100;
+            }
+            .Full_box{padding: 30px;}
+
+            /* Responsive adjustments */
+            @media (max-width: 1200px) {
+                .recent-order-grid { grid-template-columns: repeat(2, 1fr); }
+                .menu-grid { grid-template-columns: repeat(2, 1fr); }
+                .search-bar { width: 250px; }
+            }
+        </style>
+    
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+<style>
+     
+    @media (max-width: 992px) {
+        .mobilebottomspacing{margin-bottom: 10px;}
+        .dashboard-container {
+            padding: 20px 20px !important;
+            margin-bottom: 30px;
+        }
+        header{
+            padding: 15px 20px !important;
+            display: block !important;
+            place-items: center;
+            height: auto !important;
+        }
+        .wrapper{margin-left: auto !important;}
+        .search-bar {
+            width: 80%;
+            margin-bottom: 10px;
+        }
+        .header-right {
+            /* justify-content: space-between; */
+            width: 100%;
+            justify-content: center;
+        }
+        .welcome-section{
+            text-align: center;
+            display: block !important;
+        }
+        .welcome-text{text-align: center;margin-bottom: 10px;}
+        .top-actions {
+            justify-self: center;
+            width: 100%;
+            /* display: block !important; */
+        }
+        .newtopup {
+            width: 50%;
+        }
+        .top-actions button {width: 100%;margin-bottom: 10px;}
+        .stats-grid{
+            display: block !important;
+        }
+        .stat-card{
+            margin-bottom: 10px;
+        }
+        .section-header{
+            display: block !important;
+        }
+        .children-grid{display: block !important;}
+        .child-card{
+            margin-bottom: 10px;
+        }
+        .dashboard-layout{display: block !important;}
+        .page-header{
+            display: block !important;
+        }
+        .action-btns{display: block !important;}
+        .btn-outline{margin-bottom: 10px;}
+        .stats-grid{display: block !important;}
+        .stat-card{
+            margin-bottom: 10px;
+        }
+        .tabs-filters{display: block !important;}
+        /* .tabs{display: block !important;} */
+        .flex {
+            display: block !important;
+        }
+        .ActionBtnTabs {
+            display: grid !important;
+        }
+        .tab-btn {
+            margin-bottom: 3px;
+        }
+        .w-80{width:100% !important}
+        .summary-cards{display: block !important;}
+        .card-order{margin-bottom: 10px;}
+        .pricing-grid{
+            display: block !important;
+        }
+        .pricing-card{margin-bottom: 10px;}
+        .bottom-row{display: block !important;}
+        .bottom-row .pricing-card{width: 100% !important;}
+        .btn{width: 100%;}
+        .transaction-header{display: block !important;}
+        /* .recent-order-grid{display: block !important;} */
+        /* .tabs{font-size: 10px !important;} */
+        .tabs{margin-bottom: 0 !important;}
+        .category-section .tab.active{margin: 0 !important;}
+        .menusearchbar{float: none !important;justify-content: center;}
+        .menusearchbar input{margin: 0;}
+        /* .category-icons{display: block !important;} */
+        .menu-grid{display: block !important;}
+        .main-layout{display: block !important;margin-left: auto !important;}
+        .container{padding: 20px !important;}
+        .alertcard-header{display: block !important;}
+        .setting-item{display: block !important;}
+        .alertcard{display: block !important;}
+        .alertcard div{display: block !important;}
+        .filters{display: block !important;}
+        .filters button{width: 100%;}
+        .calendar-header{display: block !important;}
+        .calendar-legend{display: block !important;}
+        .calendar-grid{overflow: auto;}
+        .order-card{margin-bottom: 10px;}
+        .popup-content{width: 90% !important;}
+        aside {
+        position: fixed !important;
+        transform: translateX(-100%);
+        height: 100% !important;
+        }
+
+        aside.active {
+            transform: translateX(0);
+            z-index: 999;
+            width: 100% !important;
+        }
+        .mobile-menu-open{overflow: hidden;}
+        .custom-logo {
+            margin-bottom: 20px !important;
+            width: stretch;
+        }
+        .logo-top img {
+            display: none;
+        }
+        .logo-container {
+            padding: 0 20px 10px !important;
+        }
+        nav ul li a{padding: 10px !important;}
+
+        /* Floating mobile menu button */
+        .mobile-menu-btn {
+            position: fixed;
+            left: 20px;
+            top: 15px;
+            z-index: 1001;
+            font-size: 12px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 16px 4px !important;
+            cursor: pointer;
+            display: block !important;
+        }
+
+        /* Overlay effect */
+        main.mobile-menu-open::after {
+            content: '';
+            position: fixed;
+            left: 0; top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+        main{margin-left: 0 !important;}
+        .search-container{width: 80% !important;}
+        /* .category-item {width: 100% !important;margin-bottom: 10px;} */
+        .transactions-section{overflow: auto;}
+        .action-buttons{display: block !important;margin-top: 10px;}
+        .action-buttons button{margin-bottom: 10px;}
+        .toggle-btn {
+            width: 100%;
+            background: #d0ae27 !important;
+            border-radius: 5px;
+            color: white;
+            padding: 10px;
+        }
+        .meal-item{
+            display: block !important;
+            place-items: center;
+            text-align: center;
+        }
+        .meal-icon-wrapper{margin-bottom: 10px;}
+        .meal-details{margin-bottom: 10px;}
+        .search-container input{width: 90%;}
+        .search-container{margin-bottom: 10px;}
+        .wrapper main{display: block !important;}
+        .form-actions {display: block !important;}
+        .form-actions button{margin-bottom: 10px;}
+        .badge{position: relative;}
+        .search-container{margin-left: 28px;max-width: 80% !important;}
+        body{display: block !important;}
+        .header-right{margin-top: 10px;}
+        .card-header{display: block !important;}
+        .card-header h2{margin-bottom: 10px;}
+        .card-header-actions{display: block !important;}
+        .card-header-actions .btn{margin-bottom: 10px;}
+        header{
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+        /* .header-actions{
+            width: 100%;
+            justify-content: space-between;
+        } */
+        footer {
+            padding: 10px;
+            text-align: center;
+        }
+        .page-title h1{font-size: 26px !important;}
+        .card-header h2 {font-size: 22px !important;}
+        .add-meal-btn{padding: 15px !important;}
+        .child-avatar {
+            width: 37px !important;
+            height: 37px !important;
+        }
+        .search-container input{padding: 8px 20px 8px 45px !important;}
+        .category-item span{display: ruby !important;}
+        .category-item{height: 90px !important;}
+        .topbarset .icon-btn{
+            display: flex !important;
+            position: absolute;
+            right: 15px;
+        }
+        .topbarset{justify-content: center !important;}
+        .subscription-card{display: none;}
+        .ATMCard .card_logo{
+            height: 1em !important;
+            bottom: 1.0em !important;
+        }
+        .ATMCard .card_number{margin-top: 0 !important;}
+        .ActionBtnTabs .tab-btn{border: 1px solid #121828;margin-bottom: 10px;}
+        #calendar .stat-icon{display: none;}
+        #calendar .stat-label
+        {
+            margin-bottom: 0 !important;
+        }
+        #calendar .stat-value
+        {
+            margin-bottom: 0 !important;
+            float: right;
+            margin-top: -20px;
+            font-size: 18px;
+        }
+        #billing .card-icon{display: none;}
+        #billing .card-order
+        {
+            display: block;
+            border: 3px solid #d0af4e;
+            
+        }
+        #billing .label
+        {
+            margin-bottom: 0 !important;
+        }
+        #billing .trend
+        {
+            display: block;
+        }
+        #billing .value
+        {
+            margin-bottom: 0 !important;
+            float: right;
+            margin-top: -20px;
+            font-size: 15px;
+        }
+        .form-actions .btn-cancel{margin-bottom: 10px;}
+        .payment-section .stat-card{padding: 15px;}
+        .payment-section .icon-top{display: none;}
+        .payment-section .stat-label{margin-bottom: 0;font-size: 9px;}
+        .payment-section .stat-value{margin-bottom: 0;font-size: 12px;float: right;margin-top: -17px;}
+        .payment-section .ATMCard{
+            background: linear-gradient(0deg, #fffbf0 0%, #ffffff 50%, #ffffff 100%) !important;
+        }
+        .ATMCard.active-card {
+            background: #e1c67626 !important;
+            border: 2px solid #d0b04e !important;
+        }
+        
+    }
+    
+    
+    @media (min-width: 992px) and (max-width: 1300px) {
+        .category-item {width: auto !important;}
+        .menu-grid{
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+        .recent-order-grid{
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
+        .category-item {
+            width: 60px !important;
+        }
+        .menusearchbar{
+            width: 100% !important;
+        }
+    }
+    @media (min-width: 993px) {
+            .order-card{
+                transition: all 0.3s ease;
+            }
+            .order-card:hover{
+                transition: all 0.3s ease;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .category-item{
+                transition: all 0.3s ease;
+            }
+            .category-item:hover{
+                background-color: #d4b055;
+                border-color: #d4b055;
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .menu-card{
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .menu-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .newtopup a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .newtopup a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c9a758;
+                color: white;
+            }
+            .orderButton{
+                transition: all 0.3s ease;
+            }
+            .orderButton:hover{
+                transform: translateY(-5px);
+                /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
+                background: #c9a758;
+            }
+            .child-avatar {
+                width: 50px !important;
+                height: 37px !important;
+            }
+            .btn-outline{
+                transition: all 0.3s ease;
+            }
+            .btn-outline:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-primary{
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.sarah{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.sarah:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.alex{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.alex:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn {
+                transition: all 0.3s ease !important;
+            }
+            .btn-secondary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .schedule-card .meal-item{
+                transition: all 0.3s ease;
+            }
+            .schedule-card .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #e5d5a1;
+            }
+            .tab-btn:hover {
+                border-bottom: 3px solid #c9a758;
+            }
+            .calendar-day .meal-item{
+                transition: all 0.3s ease;
+            }
+            .calendar-day .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .day-actions .btn-action{
+                transition: all 0.3s ease;
+            }
+            .day-actions .btn-action:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .stat-card{
+                transition: all 0.3s ease;
+            }
+            .stat-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .balance-pill{
+                transition: all 0.3s ease;
+            }
+            .balance-pill:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-card{
+                transition: all 0.3s ease;
+            }
+            .meal-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #c9a758;
+            }
+            .icon-btn{
+                transition: all 0.3s ease;
+            }
+            .icon-btn:hover{
+                animation: bounce 0.4s;
+            }
+            @keyframes bounce {
+                0%   { transform: translateY(0); }
+                30%  { transform: translateY(-6px); }
+                60%  { transform: translateY(3px); }
+                100% { transform: translateY(0); }
+            }
+            .ActionBtnTabs .tab-btn.active {
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .ActionBtnTabs .tab-btn{
+                border: 1px solid #ccc !important;
+                transition: all 0.3s ease;
+            }
+            
+            .ActionBtnTabs .tab-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #111827;
+                color:white;
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .quick-pay-btn{
+                transition: all 0.3s ease;
+            }
+            .quick-pay-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card-order{
+                transition: all 0.3s ease;
+            }
+            .card-order:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .action-btn{
+                transition: all 0.3s ease;
+            }
+            .action-btn:hover{
+                transform: translateY(-5px);
+            }
+            .page-num{
+                transition: all 0.3s ease;
+            }
+            .page-num:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #eec218;
+                color: white;
+            }
+            .filter-btn{
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c6a752;
+                color: white;
+            }
+            .section-header .view-link:hover{
+                color: #ebaa12;
+            }
+            .order-card .btn-reorder:hover{
+                background-color: #c9a758;
+            }
+            .btn-add-order{
+                
+            }
+            .btn-add-order:hover{
+                background-color: #c9a758 !important;
+            }
+            .pencilcolor svg{
+                transition: all 0.3s ease;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .meal-actions .remove-meal:hover{
+                animation: bounce 0.4s;
+            }
+            .btn-cancel{
+                transition: all 0.3s ease;
+            }
+            .btn-cancel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white;
+            }
+            .btn-save{
+                transition: all 0.3s ease;
+            }
+            .btn-save:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+            }
+            .btnarrow:hover{
+                color: #996d00;
+            }
+            #prevMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            #nextMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            .topupsetcolor{
+                transition: all 0.3s ease;
+            }
+            .topupsetcolor:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .plus:hover{
+                background-color: #996d00;
+            }
+            .minus:hover{
+                background-color: #996d00;
+            }
+            nav ul li a:hover:not(.active) {
+                background: linear-gradient(90deg, #d4af37, #e5d5a1);
+                color:white;
+            }
+            .save-btn-alert{
+                transition: all 0.3s ease;
+            }
+            .save-btn-alert:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-change{
+                transition: all 0.3s ease;
+                color: white;
+            }
+            .btn-change:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .child-alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .child-alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+                   .btn-pay{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .btn-pay:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+                .quick-btn{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .quick-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+        }
+
+   
+        .table-search .fa-magnifying-glass {
+            position: absolute;
+            left: 8px;
+            align-self: center;
+        }
+        .mobile-menu-btn{display: none;}
+        
+        .child-info{
+            display: flex;
+            gap: 15px;
+        }
+        .child-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+        }
+
+        .custom-logo {
+            text-align: center;
+            margin-bottom: 55px !important;
+            align-self: center;
+        }
+        aside.left-sidebar{
+            padding: 20px 20px;
+        }
+        .topbarset{display: flex;justify-content: space-between;width: 100%;}
+        .topbarset .icon-btn{display: none;}
+
+        .menu-icon{
+    width: 25px;
+    height: 2px;
+    background: #000;
+    display: block;
+    position: relative;
+    transition: 0.3s;
+}
+
+.menu-icon::before,
+.menu-icon::after{
+    content: "";
+    position: absolute;
+    width: 25px;
+    height: 2px;
+    background: #000;
+    left: 0;
+    transition: 0.3s;
+}
+
+.menu-icon::before{
+    top: -8px;
+}
+
+.menu-icon::after{
+    top: 8px;
+}
+
+/* ✅ WHEN ACTIVE → CROSS */
+.mobile-menu-btn.active .menu-icon{
+    background: transparent;
+}
+
+.mobile-menu-btn.active .menu-icon::before{
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.mobile-menu-btn.active .menu-icon::after{
+    top: 0;
+    transform: rotate(-45deg);
+} 
+
+    
+    
+</style>
+<script>
+$(document).ready(function(){
+
+    $('.mobile-menu-btn').click(function(e){
+        e.stopPropagation();
+
+        $('aside').toggleClass('active');
+        $('body').toggleClass('mobile-menu-open');
+
+        // ✅ TOGGLE BUTTON STATE
+        $(this).toggleClass('active');
+    });
+
+    $(document).click(function(e){
+        if(!$(e.target).closest('aside, .mobile-menu-btn').length){
+
+            $('aside').removeClass('active');
+            $('body').removeClass('mobile-menu-open');
+
+            // ✅ RESET ICON
+            $('.mobile-menu-btn').removeClass('active');
+        }
+    });
+
+});
+</script><body>
+
+    <button class="mobile-menu-btn">
+    <span class="menu-icon"></span>
+</button>
+<aside class="left-sidebar">
+    <div class="custom-logo">
+        <div class="logo-top">
+            <a href="demo.html">
+                <img src="Students/images/canteen_logo.png">
+            </a>
+        </div>
+    </div>
+
+    <nav>
+        <ul>
+                        <li><a href="studentdashboard.html" class="">Order Here</a></li>
+            <!-- <li><a href="#" class="">Today Menu</a></li> -->
+            <!-- <li><a href="#" class="">Favorites</a></li> -->
+            <li><a href="studentorderhistory.html" class="">Order & Billing History</a></li>
+            <li><a href="studentpre-order.html" class="">Schedule Your Order</a></li>
+            <li><a href="studentpaythecard.html" class="">TopUp & Cards</a></li>
+            <li><a href="studentsettingalert.html" class="">Settings</a></li>
+            <!-- <li><a href="studentpre-order2.html" class="">Weekly Plan</a></li> -->
+            <!-- <li><a href="future-order.html" class="">Future Order</a></li> -->
+        </ul>
+    </nav>
+
+    
+
+</aside>
+<style>
+aside.left-sidebar {
+    width: 260px;
+}
+</style>
+
+<script>
+const rangeInput = document.getElementById("priceRange");
+const priceValue = document.getElementById("priceValue");
+
+// Update value while sliding
+rangeInput.addEventListener("input", function() {
+    priceValue.textContent = this.value+'AED';
+});
+</script>
+<style>
+    .update-btn{display: block;text-align: center;}
+    .logoutactive {
+        border: 1px solid #d1b02d;
+    }
+    .logoutactive:hover {
+        background: linear-gradient(90deg, #d4af37, #e5d5a1);
+        color: white;
+    }
+</style>	
+	
+    <!-- Sidebar -->
+
+<style>
+    .flex.items-center.bg-gray-50.rounded-lg.p-1 
+        {
+            border: 1px solid #d0ae27;
+            width: 105px;
+            justify-content: space-between;
+        }
+        .minus {
+                background: #d0ae27;
+                color: white;
+                border-radius: 6px;
+            }
+    @media (max-width: 992px) {
+        .flex.justify-between.topupcart {
+        display: block !important;
+    }
+
+        .px-8{margin-top: 160px;}
+        header {
+            top: 0;
+            position: fixed ;
+            width: 100%;
+        }
+        .flex.items-center.bg-gray-50.rounded-lg.p-1 {
+            display: flex !important;
+            width: 132px;
+            place-content: space-between;
+            margin: auto;
+            border: 1px solid #d0ae27;
+        }
+        .minus {
+                width: 30px;
+                height: 30px;
+                background: #d0ae27;
+                color: white;
+                border-radius: 6px;
+            }
+            .minus svg {
+                font-size: 16px;
+                vertical-align: sub;
+            }
+            .plus {
+                width: 30px;
+                height: 30px;
+            }
+            .plus svg {
+                font-size: 13px;
+            }
+            span.qty {
+                font-size: 15px;
+                text-align: center;
+                align-content: center;
+                font-weight: 500;
+            }
+            .flex.space-x-2 {
+                display: flex !important;
+            }
+            .p-4.flex.justify-between.items-center {
+                justify-self: center;
+            }
+            .flex.flex-col.items-center.justify-center.border-2.border-dashed.border-gray-100.rounded-lg.p-2 {
+                place-items: center;
+            }
+            .w-6.h-6.rounded-full.bg-gray-100.flex.items-center.justify-center.mb-1 {
+                position: relative;
+            }
+            .w-6.h-6.rounded-full.bg-gray-100.flex.items-center.justify-center.mb-1 svg {
+                left: 8px;
+                position: absolute;
+                top: 7px;
+            }
+            .calendar-grid.text-\[10px\].font-bold.text-gray-300.uppercase.text-center.py-2.bg-white div {
+                font-size: 20px;
+                height: 50px;
+                place-content: center;
+                border-bottom: 1px solid #eee;
+                color: #c6a752;
+            }
+            p.text-gray-400.text-sm {
+                margin-bottom: 20px;
+            }
+            .px-8.py-6.flex {
+                margin-top: 124px;
+            }
+            .card-cart{position:relative;}
+                .flex.items-center.bg-gray-50.rounded-lg.p-1 {
+                position: absolute;
+                right: 12px;
+                top: 13px;
+                }
+                .item-total {
+                font-size: 22px;
+            }
+            .card-cart h4 {
+                margin-top: 10px;
+                font-size: 18px;
+            }
+            .icon-btn.removeitem {
+                position: absolute;
+                top: 15px;
+                right: 152px !important;
+            }
+            .icon-btn.removeitem svg{
+                color:red;
+                font-size: 14px;
+            }
+            .flex.justify-between {
+                display: flex !important;
+            }
+    }
+    
+    .card-cart{position:relative;}
+    .icon-btn.removeitem {
+        position: absolute;
+        bottom: 23px;
+        right: 130px;
+    }
+    .icon-btn.removeitem svg{
+    color:red;
+    font-size: 14px;
+}
+.empty-cart-msg {
+    border: 2px dashed #ddd;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #b5a06d;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    background: none;
+}
+</style>
+    <!-- Main Section -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <!-- <header>
+    <div class="search-bar">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="What do you want eat today...">
+    </div>
+    <div class="header-right">
+        <div class="balance-pill">
+            <span>Balance</span>
+            <span>AED 150.00</span>
+        </div>
+        <div class="icon-btn">
+            <i class="fa-regular fa-bell"></i>
+            <div class="badge"></div>
+        </div>
+        <a href="parentssettingalert.html">
+            <div class="icon-btn">
+                <i class="fa-solid fa-cog"></i>
+            </div>
+        </a>
+    </div>
+</header> -->
+
+<header>
+    <div class="topbarset">
+        <div class="search-container">
+            <i class="fa-solid fa-search searchmenu"></i>
+            <input type="text" placeholder="What do you want eat today...">
+        </div>
+        <a href="studentdashboard.html">
+            <div class="icon-btn">
+                <i class="fa-solid fa-home"></i>
+            </div>
+        </a>
+    </div>
+    <div class="header-right">
+        <div class="child-info" style="margin-bottom: 0;">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sophie Thompson" class="child-avatar">
+        </div>
+        <!-- <div class="balance-badge">
+            <span class="balance-label">Balance</span>
+            <span class="balance-amount">AED 150.00</span>
+        </div> -->
+        <div class="icon-btn" id="NotificationBtn">
+            <i class="fa-regular fa-bell"></i>
+            <div class="notification-dot"></div>
+        </div>
+        <a href="studentsettingalert.html">
+            <div class="icon-btn">
+                <i class="fa-solid fa-cog"></i>
+            </div>
+        </a>
+    </div>
+</header>
+<style>
+        .child-info {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.child-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+}
+    header {
+    background-color: #333;
+}
+header{padding: 15px 40px;}
+    .main-content{margin-left: 0;}
+    .balance-badge {
+    background-color: #d4af37;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: auto;
+}
+.balance-badge span:first-child {
+    font-size: 10px;
+    opacity: 1;
+    text-transform: capitalize;
+}
+.balance-badge span:last-child {
+    font-weight: 700;
+    font-size: 16px ;
+}
+.balance-badge span{ opacity: 1;}
+main{padding: 0;margin-left: 0;}
+.searchmenu{
+    position: absolute;
+    align-self: center;
+    margin: 12px;
+}
+</style>
+
+<!-- NEW RESPONSIVE NOTIFICATION POPUP -->
+<div id="notificationPopup" class="notification-popup" style="display:none;">
+    <div class="notification-box">
+        <span class="close-notification">&times;</span>
+        <h2>Important Notice</h2>
+        <div class="" id="notificationMessage">
+            <p >Orders placed today must be submitted at least <span>30 minutes</span> before break time.</p>
+            <div class="LateOrder">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Late orders will be delayed to text next session.
+            </div>
+        </div>
+        <button class="noti-btn">I Understand</button>
+        <button class="noti-btn">Review Schedule</button>
+    </div>
+</div>
+
+<style>
+/* Notification popup styles */
+.notification-box p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.notification-box h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+#notificationMessage p span {
+    color: #d0af4e;
+}
+.LateOrder {
+    color: #c70707;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 11px;
+    background: #ffd4d4;
+    padding: 10px 8px;
+}
+.noti-btn{
+    background-color: #d4b055;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+.noti-btn:hover{
+    background-color: #bf8e14;
+}
+.notification-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    align-content: center;
+    font-family: sans-serif;
+    word-wrap: break-word;
+}
+.notification-popup .notification-box {
+    background: #fff;
+    padding: 20px;
+    width: 350px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    margin: auto;
+}
+.notification-popup .close-notification {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .notification-popup {
+        top: 10px;
+        right: 10px;
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    .notification-popup .close-notification {
+        font-size: 16px;
+        top: 3px;
+        right: 5px;
+    }
+    .notification-popup .notification-box{width: 100%;}
+}
+</style>
+<script>
+$(document).ready(function(){
+
+    // Function to show notification
+    function showNotification(message){
+        $("#notificationMessage").html(message);
+        $("#notificationPopup").fadeIn();
+    }
+
+    // Close notification on close button or any action button
+    $(".close-notification, .noti-btn").click(function(){
+        $("#notificationPopup").fadeOut();
+    });
+
+    // Trigger notification when clicking bell icon
+    $("#NotificationBtn").click(function(e){
+        e.preventDefault();
+
+        const message = `
+            <p >Orders placed today must be submitted at least <span>30 minutes</span> before break time.</p>
+            <div class="LateOrder">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Late orders will be delayed to text next session.
+            </div>
+        `;
+        showNotification(message);
+    });
+
+});
+</script>
+        <div class="px-8 py-6 flex gap-8">
+            <!-- Left Column -->
+            <div class="flex-1">
+                <div class="flex justify-between items-end mb-6 topupcart">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-1">Cart</h2>
+                        <p class="text-gray-400 text-sm">Review your meals and manage your weekly canteen plan in AED.</p>
+                    </div>
+                    <a href="studentpaythecard.html?Topup=1" class="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg font-semibold text-sm topupsetcolor">Top-Up</a>
+                </div>
+
+                <!-- Main Orders -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">Main Orders</h3>
+                        <span class="bg-orange-100 text-orange-500 text-[10px] font-bold px-2 py-0.5 rounded-full">2 Items</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Order Item 1 -->
+                        <div class="card-cart p-4 flex items-center">
+                            <img src="https://placehold.co/100x100?text=Wrap" alt="Grilled Chicken Wrap with avocado and honey mustard" class="order-item-img mr-4">
+                            <div class="flex-1">
+                                <h4 class="font-bold">Grilled Chicken Wrap</h4>
+                                <p class="text-xs text-gray-400 mb-2">Whole wheat tortilla, avocado, honey mustard</p>
+                                <div class="flex gap-2">
+                                    <span class="tag-green text-[9px] font-bold px-2 py-0.5 rounded uppercase">High Protein</span>
+                                    <span class="text-[9px] font-bold text-orange-400 uppercase flex items-center">
+                                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Weekly Routine
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold mb-2 item-total" >8.50 AED</div>
+                                <div class="flex items-center bg-gray-50 rounded-lg p-1">
+                                    <button class="minus w-6 h-6 flex items-center justify-center text-gray-400"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                    <span class="mx-3 text-sm font-bold qty">1</span>
+                                    <button class="plus w-6 h-6 flex items-center justify-center bg-[#D4AF37] text-white rounded-md"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                                </div>
+                                <div class="icon-btn removeitem"><i class="fa-solid fa-trash text-[10px]"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Order Item 2 -->
+                        <div class="card-cart p-4 flex items-center">
+                            <img src="https://placehold.co/100x100?text=Pasta" alt="Creamy Pesto Pasta with pine nuts and fresh basil" class="order-item-img mr-4">
+                            <div class="flex-1">
+                                <h4 class="font-bold">Creamy Pesto Pasta</h4>
+                                <p class="text-xs text-gray-400 mb-2">Pine nuts, fresh basil, aged parmesan</p>
+                                <div class="flex gap-2">
+                                    <span class="tag-orange text-[9px] font-bold px-2 py-0.5 rounded uppercase">Vegetarian</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold mb-2 item-total">12.00 AED</div>
+                                <div class="flex items-center bg-gray-50 rounded-lg p-1">
+                                    <button class="minus w-6 h-6 flex items-center justify-center text-gray-400"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                    <span class="mx-3 text-sm font-bold qty">1</span>
+                                    <button class="plus w-6 h-6 flex items-center justify-center bg-[#D4AF37] text-white rounded-md"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                                </div>
+                                <div class="icon-btn removeitem"><i class="fa-solid fa-trash text-[10px]"></i></div>
+                            </div>
+                        </div>
+                        <a href="studentdashboard.html">
+                            <div class="empty-cart-msg text-center text-gray-400 py-4" style="display:none;">
+                                Add item
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Calendar Section -->
+                <!-- <div class="card-cart overflow-hidden mb-8">
+                    <div class="p-4 flex justify-between items-center">
+                        <h3 class="font-bold" id="calendarMonth">October 2023</h3>
+                        <div class="flex space-x-2">
+                            <button id="prevMonth" class="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-lg text-gray-400"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                            <button id="nextMonth" class="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-lg text-gray-400"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid text-[10px] font-bold text-gray-300 uppercase text-center py-2 bg-white" >
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div class="text-red-200">Sat</div>
+                        <div class="text-red-200">Sun</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarDays">
+                        <div class="calendar-cell text-gray-300">25</div>
+                        <div class="calendar-cell text-gray-300">26</div>
+                        <div class="calendar-cell text-gray-300">27</div>
+                        <div class="calendar-cell text-gray-300">28</div>
+                        <div class="calendar-cell text-gray-300">29</div>
+                        <div class="calendar-cell text-gray-300">30</div>
+                        <div class="calendar-cell active text-orange-400">1</div>
+                        
+                        <div class="calendar-cell active">
+                            <div class="font-bold mb-2">2</div>
+                            <div class="tag-blue p-1 rounded mb-1">
+                                <div class="font-bold uppercase text-[8px]">Alex</div>
+                                <div class="text-[9px]">Pepperoni Pizza</div>
+                            </div>
+                            <div class="tag-pink p-1 rounded">
+                                <div class="font-bold uppercase text-[8px]">Sarah</div>
+                                <div class="text-[9px]">Garden Salad</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell active">
+                            <div class="font-bold mb-2">3</div>
+                            <div class="tag-blue p-1 rounded">
+                                <div class="font-bold uppercase text-[8px]">Alex</div>
+                                <div class="text-[9px]">Chicken Nuggets</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell active">
+                            <div class="font-bold mb-2">4</div>
+                            <div class="tag-pink p-1 rounded">
+                                <div class="font-bold uppercase text-[8px]">Sarah</div>
+                                <div class="text-[9px]">Veggie Pasta</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell active flex flex-col items-center justify-center border-2 border-dashed border-gray-100 m-1 rounded-lg">
+                            <div class="font-bold mb-2 self-start absolute top-2 left-2">5</div>
+                            <div class="text-center">
+                                <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-1">
+                                    <i class="fa-solid fa-plus text-gray-300 text-[10px]"></i>
+                                </div>
+                                <div class="text-[8px] text-gray-400 font-bold uppercase">Order Now</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell active">
+                            <div class="font-bold mb-2">6</div>
+                            <div class="tag-blue p-1 rounded mb-1">
+                                <div class="font-bold uppercase text-[8px]">Alex</div>
+                                <div class="text-[9px]">Beef Tacos</div>
+                            </div>
+                            <div class="tag-pink p-1 rounded">
+                                <div class="font-bold uppercase text-[8px]">Sarah</div>
+                                <div class="text-[9px]">Chicken Wrap</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell active">
+                            <div class="font-bold mb-2">7</div>
+                        </div>
+                        <div class="calendar-cell active">
+                            <div class="font-bold mb-2">8</div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Message Section -->
+                <div class="bg-[#FAF7ED] border border-[#F0EAD6] rounded-2xl p-6 mobilebottomspacing">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-utensils text-orange-400 mr-2"></i>
+                        <h3 class="font-bold">Message for Kitchen Staff</h3>
+                    </div>
+                    <textarea placeholder="Any allergies or dietary preferences? (e.g., No dressing, extra napkins...)" class="w-full h-24 p-4 rounded-xl border border-gray-200 focus:outline-none text-sm resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="w-80 space-y-6">
+                <!-- Order Summary -->
+                <div class="card p-6">
+                    <h3 class="font-bold text-lg mb-6">Order Summary</h3>
+                    <div class="space-y-4 text-sm mb-8">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Subtotal</span>
+                            <span class="font-bold" id="subtotal">20.50 AED</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Service Fee</span>
+                            <span class="font-bold">0.50 AED</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Eco-Packaging</span>
+                            <span class="font-bold">1.00 AED</span>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-100 pt-6 mb-8">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Total amount</div>
+                                <div class="text-2xl font-bold text-[#D4AF37]" id="totalAmount">22.00 AED</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Pick Up Time</div>
+                                <div class="text-xs font-bold">Today, 12:30 PM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <a class="btn-primary" href="studentpaythecard.html?Cardpay=1">Pay By Card</a>
+                        <a class="btn-primary" href="studentthankyou.html" >Pay By Wallet</a>
+                    </div>
+                </div>
+
+                <!-- Weekly Planning Promo -->
+                <!-- <div class="bg-[#1A1A1A] text-white p-6 rounded-2xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex items-center mb-3">
+                            <i class="fa-regular fa-calendar-check text-orange-400 mr-2"></i>
+                            <h4 class="font-bold">Weekly Planning</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-4">Save 15% on your total by subscribing to a 5-day meal plan. You can pause anytime.</p>
+                        <a href="#" class="text-[#D4AF37] text-xs font-bold flex items-center uppercase">
+                            Learn More <i class="fa-solid fa-arrow-up-right-from-square ml-1.5 text-[10px]"></i>
+                        </a>
+                    </div>
+                    <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-400/20 to-transparent rounded-full blur-2xl"></div>
+                </div> -->
+
+                <!-- Help Section -->
+                <div class="flex items-center p-4">
+                    <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-400 mr-3">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-sm font-bold">Need help?</h5>
+                        <p class="text-[10px] text-gray-400">Chat with the canteen manager</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
+
+</body>
+</html>
+<div class="blacklist-popup">
+        <div class="popup-box">
+            <span class="close-popup">&times;</span>
+            <h3>Thank You</h3>
+            <p>Thank You For The Payment</p>
+
+            <button class="confirm-btn">OK</button>
+        </div>
+    </div>
+<style>
+        
+/* --------- */
+
+/* Popup Background */
+.blacklist-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    align-content: center;
+    justify-items: center;
+}
+.popup-box h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #d4b055;
+}
+
+/* Popup Box */
+.popup-box {
+    background: #fff;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+}
+
+/* Close button */
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Button */
+.confirm-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border: 1px solid #d9a507;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.confirm-btn:hover{
+    color: white;
+}
+/* Disabled card */
+.menu-card.disabled-card {
+    opacity: 0.5;
+    filter: grayscale(100%);
+    pointer-events: none;
+    position: relative;
+}
+
+/* Disable Order button */
+.btn-add-order.disabled-btn {
+    pointer-events: none;
+    background: #ccc;
+    color: #666;
+}
+
+/* Optional badge */
+.menu-card.disabled-card::after {
+    content: "Blacklisted";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+/* Mobile */
+@media (max-width: 576px) {
+    .popup-box {
+        width: 95%;
+    }
+}
+</style>
+<style>
+    .btn-primary{display: block;}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const serviceFee = 0.50;
+    const ecoFee = 1.00;
+
+    function updateSummary() {
+        let subtotal = 0;
+
+        document.querySelectorAll(".item-total").forEach(function (item) {
+            let price = parseFloat(item.innerText.replace(" AED", ""));
+            subtotal += price;
+        });
+
+        let total = subtotal + serviceFee + ecoFee;
+
+        document.getElementById("subtotal").innerText = subtotal.toFixed(2) + " AED";
+        document.getElementById("totalAmount").innerText = total.toFixed(2) + " AED";
+    }
+
+    document.querySelectorAll(".card-cart").forEach(function (item) {
+
+        const plusBtn = item.querySelector(".plus");
+        const minusBtn = item.querySelector(".minus");
+        const qtySpan = item.querySelector(".qty");
+        const totalDiv = item.querySelector(".item-total");
+
+        const basePrice = parseFloat(totalDiv.innerText.replace(" AED", ""));
+
+        plusBtn.addEventListener("click", function () {
+            let qty = parseInt(qtySpan.innerText);
+            qty++;
+            qtySpan.innerText = qty;
+
+            let newTotal = qty * basePrice;
+            totalDiv.innerText = newTotal.toFixed(2) + " AED";
+
+            updateSummary();
+        });
+
+        minusBtn.addEventListener("click", function () {
+            let qty = parseInt(qtySpan.innerText);
+
+            if (qty > 1) {
+                qty--;
+                qtySpan.innerText = qty;
+
+                let newTotal = qty * basePrice;
+                totalDiv.innerText = newTotal.toFixed(2) + " AED";
+
+                updateSummary();
+            }
+        });
+
+    });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const monthTitle = document.getElementById("calendarMonth");
+    const calendarDays = document.getElementById("calendarDays");
+    const prevBtn = document.getElementById("prevMonth");
+    const nextBtn = document.getElementById("nextMonth");
+
+    let currentDate = new Date(); // Start with current month
+
+    // Sample Events (Can later be loaded via PHP/Ajax)
+    const calendarEvents = {
+        "2026-02-02": [
+            { name: "Alex", item: "Pepperoni Pizza", type: "blue" },
+            { name: "Sarah", item: "Garden Salad", type: "pink" }
+        ],
+        "2026-02-03": [
+            { name: "Alex", item: "Chicken Nuggets", type: "blue" }
+        ],
+        "2026-02-04": [
+            { name: "Sarah", item: "Veggie Pasta", type: "pink" }
+        ],
+        "2026-02-06": [
+            { name: "Alex", item: "Beef Tacos", type: "blue" },
+            { name: "Sarah", item: "Chicken Wrap", type: "pink" }
+        ]
+    };
+
+    function renderCalendar(date) {
+        calendarDays.innerHTML = "";
+
+        const year = date.getFullYear();
+        const month = date.getMonth();
+
+        const monthNames = [
+            "January","February","March","April","May","June",
+            "July","August","September","October","November","December"
+        ];
+
+        monthTitle.innerText = monthNames[month] + " " + year;
+
+        // First day of month (Monday first)
+        let firstDay = new Date(year, month, 1).getDay();
+        firstDay = firstDay === 0 ? 6 : firstDay - 1;
+
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const prevMonthDays = new Date(year, month, 0).getDate();
+
+        // Previous month empty cells
+        for (let i = firstDay; i > 0; i--) {
+            const div = document.createElement("div");
+            div.className = "calendar-cell text-gray-300";
+            div.innerText = prevMonthDays - i + 1;
+            calendarDays.appendChild(div);
+        }
+
+        const today = new Date();
+        const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        // Current month cells
+        for (let day = 1; day <= daysInMonth; day++) {
+            const fullDate =
+                year + "-" +
+                String(month + 1).padStart(2, '0') + "-" +
+                String(day).padStart(2, '0');
+
+            const div = document.createElement("div");
+            div.className = "calendar-cell active cursor-pointer relative p-2";
+
+            let html = `<div class="font-bold mb-2">${day}</div>`;
+
+            const currentFullDate = new Date(year, month, day);
+
+            if (calendarEvents[fullDate]) {
+                // Show events
+                calendarEvents[fullDate].forEach(event => {
+                    let tagClass = event.type === "blue" ? "tag-blue" : "tag-pink";
+                    html += `
+                        <div class="${tagClass} p-1 rounded mb-1">
+                            <div class="font-bold uppercase text-[8px]">${event.name}</div>
+                            <div class="text-[9px]">${event.item}</div>
+                        </div>
+                    `;
+                });
+            } else if (currentFullDate >= todayDate) {
+                // Show Order Now only for today/future
+                html += `
+                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-lg p-2">
+                        <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                            <i class="fa-solid fa-plus text-gray-300 text-[10px]"></i>
+                        </div>
+                        <div class="text-[8px] text-gray-400 font-bold uppercase">Order Now</div>
+                    </div>
+                `;
+            } else {
+                // Past dates: gray out
+                div.classList.add("text-gray-300");
+            }
+
+            // Highlight today
+            if (currentFullDate.getTime() === todayDate.getTime()) {
+                div.classList.add("text-orange-400");
+            }
+
+            div.innerHTML = html;
+            calendarDays.appendChild(div);
+        }
+
+        // Next month empty cells to complete row
+        const totalCells = calendarDays.children.length;
+        const nextDays = 7 - (totalCells % 7);
+        if (nextDays < 7) {
+            for (let i = 1; i <= nextDays; i++) {
+                const div = document.createElement("div");
+                div.className = "calendar-cell text-gray-300";
+                div.innerText = i;
+                calendarDays.appendChild(div);
+            }
+        }
+    }
+
+    // Previous / Next month buttons
+    prevBtn.addEventListener("click", function () {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
+
+    nextBtn.addEventListener("click", function () {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
+
+    renderCalendar(currentDate);
+
+});
+</script>
+
+<script>
+$(document).ready(function(){
+    // OPEN POPUP
+    $("#payWalletBtn").click(function(e){
+        e.preventDefault();
+        $(".blacklist-popup").fadeIn();
+    });
+
+    // CLOSE POPUP (X)
+    $(".close-popup").click(function(){
+        $(".blacklist-popup").fadeOut();
+    });
+
+    // CLOSE POPUP (outside click)
+    $(".blacklist-popup").click(function(e){
+        if($(e.target).is(".blacklist-popup")){
+            $(this).fadeOut();
+        }
+    });
+
+    // CONFIRM BUTTON (OK) → Deduct wallet & reset Total Amount
+    $(".confirm-btn").click(function(){
+
+        let $available = $(".payment-section .form-group:eq(0) h3");
+        let $total = $(".payment-section .form-group:eq(1) h3");
+
+        let available = parseFloat($available.text().replace("AED ",""));
+        let totalAmount = parseFloat($total.text().replace("AED ",""));
+
+        // Check if enough balance
+        if(totalAmount > available){
+            alert("Insufficient balance!");
+            $(".blacklist-popup").fadeOut();
+            return;
+        }
+
+        // Deduct total amount from available balance
+        let newBalance = (available - totalAmount).toFixed(2);
+        $available.text("AED " + newBalance);
+
+        // Reset total amount to 0
+        $total.text("AED 0.00");
+
+        // Close popup
+        $(".blacklist-popup").fadeOut();
+    });
+
+});
+
+$(document).on('click', '.removeitem', function () {
+
+    let cartItem = $(this).closest('.card-cart');
+
+    cartItem.slideUp(300, function () {
+        $(this).remove();
+
+        // check if any items left
+        if ($('.card-cart').length === 0) {
+            $('.empty-cart-msg').fadeIn();
+        }
+    });
+
+});
+</script>

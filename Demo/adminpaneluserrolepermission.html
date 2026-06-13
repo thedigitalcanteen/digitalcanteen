@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Head Office Dashboard</title>
+    
+        <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <!-- SheetJS for Excel export -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+                <style>
+           
+            
+
+            
+            
+        </style>
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #fcfcfc;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        aside {
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-container {
+            padding: 0 30px 40px;
+            text-align: center;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 14px;
+            color: #d4af37;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            padding: 5px 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #777;
+            font-size: 13px;
+            font-weight: 500;
+            display: block;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        nav ul li a.active {
+            background: linear-gradient(90deg, #e2c06d, #c5a044);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(197, 160, 68, 0.3);
+        }
+
+        /* Main Content Styles */
+        main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+        .logo {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+        nav ul li {
+            margin-bottom: 5px;
+            padding: 0 15px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #7d7d7d;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 20px;
+            display: block;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        aside{
+            padding: 20px 0;
+        }
+        /* main{width: 75% !important;} */
+
+        @media (min-width: 993px) {
+            .child-card {
+                transition: all 0.3s ease;
+            }
+            .child-card:hover {
+                transform: translateY(-5px);
+                border: 2px solid #d0b04e;
+                background: #e1c67626;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .order-card{
+                transition: all 0.3s ease;
+            }
+            .order-card:hover{
+                transition: all 0.3s ease;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .category-item{
+                transition: all 0.3s ease;
+            }
+            .category-item:hover{
+                background-color: #d4b055;
+                border-color: #d4b055;
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .menu-card{
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .menu-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .newtopup a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .newtopup a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c9a758;
+                color: white;
+            }
+            .orderButton{
+                transition: all 0.3s ease;
+            }
+            .orderButton:hover{
+                transform: translateY(-5px);
+                /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
+                background: #c9a758;
+            }
+            .actions-cell a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .actions-cell a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                color: white;
+            }
+            .page-btn{
+                transition: all 0.3s ease;
+            }
+            .page-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .filter-btn{
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c6a752;
+                color: white;
+            }
+            .btn-outline{
+                transition: all 0.3s ease !important;
+            }
+            .btn-outline:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-primary{
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.sarah{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.sarah:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.alex{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.alex:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn {
+                transition: all 0.3s ease !important;
+            }
+            .btn-secondary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .schedule-card .meal-item{
+                transition: all 0.3s ease;
+            }
+            .schedule-card .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #e5d5a1;
+            }
+            .tab-btn:hover {
+                border-bottom: 3px solid #c9a758;
+            }
+            .calendar-day .meal-item{
+                transition: all 0.3s ease;
+            }
+            .calendar-day .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .day-actions .btn-action{
+                transition: all 0.3s ease;
+            }
+            .day-actions .btn-action:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .stat-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .stat-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .balance-pill{
+                transition: all 0.3s ease;
+            }
+            .balance-pill:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-card{
+                transition: all 0.3s ease;
+            }
+            .meal-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #c9a758;
+            }
+            .icon-btn{
+                transition: all 0.3s ease;
+            }
+            .icon-btn:hover{
+                animation: bounce 0.4s;
+            }
+            @keyframes bounce {
+                0%   { transform: translateY(0); }
+                30%  { transform: translateY(-6px); }
+                60%  { transform: translateY(3px); }
+                100% { transform: translateY(0); }
+            }
+            .ActionBtnTabs .tab-btn.active {
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .ActionBtnTabs .tab-btn{
+                border: 1px solid #ccc !important;
+                transition: all 0.3s ease;
+            }
+            
+            .ActionBtnTabs .tab-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #111827;
+                color:white;
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .quick-pay-btn{
+                transition: all 0.3s ease;
+            }
+            .quick-pay-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card-order{
+                transition: all 0.3s ease;
+            }
+            .card-order:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .action-btn{
+                transition: all 0.3s ease;
+            }
+            .action-btn:hover{
+                transform: translateY(-5px);
+                color: #d4af37;
+            }
+            .page-num{
+                transition: all 0.3s ease;
+            }
+            .page-num:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #eec218;
+                color: white;
+            }
+            .section-header .view-link:hover{
+                color: #ebaa12;
+            }
+            .order-card .btn-reorder:hover{
+                background-color: #c9a758;
+            }
+            .confirm-order:hover{
+                background-color: #c9a758;
+            }
+            .btn-add-order{
+                background-color: #e1c98d !important;
+            }
+            .btn-add-order:hover{
+                background-color: #c9a758 !important;
+            }
+            .pencilcolor svg{
+                transition: all 0.3s ease;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .meal-actions .remove-meal:hover{
+                animation: bounce 0.4s;
+            }
+            .btn-cancel{
+                transition: all 0.3s ease;
+            }
+            .btn-cancel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btn-save{
+                transition: all 0.3s ease;
+            }
+            .btn-save:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btnarrow:hover{
+                color: #996d00;
+            }
+            #prevMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            #nextMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            .topupsetcolor{
+                transition: all 0.3s ease;
+            }
+            .topupsetcolor:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .plus:hover{
+                background-color: #996d00;
+            }
+            .minus:hover{
+                background-color: #996d00;
+            }
+            nav ul li a:hover:not(.active) {
+                background: linear-gradient(90deg, #d4af37, #e5d5a1);
+                color:white;
+            }
+            .upload-box{
+                transition: all 0.3s ease;
+            }
+            .upload-box:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #d4af37;
+            }
+            .btn-upload:hover{
+                background-color: #c9a758;
+                color: white;
+            }
+            .buttonanchar{
+                transition: all 0.3s ease !important;
+            }
+            .buttonanchar:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-add{
+                transition: all 0.3s ease !important;
+            }
+            .btn-add:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-block{
+                transition: all 0.3s ease !important;
+            }
+            .btn-block:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                /* border: 1px solid #d4af37; */
+                color: white;
+            }
+            .btn-submit{
+                transition: all 0.3s ease !important;
+            }
+            .btn-submit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .view-all-link:hover{
+                color: #996d00;
+            }
+            .panel{
+                transition: all 0.3s ease !important;
+            }
+            .panel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+
+            .save-btn-alert{
+                transition: all 0.3s ease;
+            }
+            .save-btn-alert:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-change{
+                transition: all 0.3s ease;
+                color: white;
+            }
+            .btn-change:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .child-alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .child-alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .add-student-btn{
+                transition: all 0.3s ease !important;
+            }
+            .add-student-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .submit-btn{
+                transition: all 0.3s ease !important;
+            }
+            .submit-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btn-register{
+                transition: all 0.3s ease !important;
+            }
+            .btn-register:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+                border: 2px solid #b08e30 !important;
+            }
+            .btn-gold{
+                transition: all 0.3s ease !important;
+                color: white !important;
+            }
+            .btn-gold:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-apply{
+                transition: all 0.3s ease !important;
+            }
+            .btn-apply:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .chart-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .chart-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            /* .table-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .table-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            } */
+            .search-box .fa-magnifying-glass {
+                position: absolute;
+                align-self: center;
+                left: 2px;
+            }
+
+            .btn-export{
+                transition: all 0.3s ease !important;
+            }
+            .btn-export:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-approve-all{
+                transition: all 0.3s ease !important;
+            }
+            .btn-approve-all:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-reject{
+                transition: all 0.3s ease !important;
+            }
+            .btn-reject:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #d4af37 !important;
+                border: 1px solid #d4af37;
+                color: white !important;
+            }
+            .btn-approve{
+                transition: all 0.3s ease !important;
+            }
+            .btn-approve:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #d4af37 !important;
+                color: white !important;
+            }
+
+            .tab.active{
+                background-color: #f0c418 !important;
+                color: white !important;
+            }
+            .tab:hover{
+                background-color: #f0c418;
+                color: white;
+                margin: auto 2px;
+            }
+            .orders-panel{
+                transition: all 0.3s ease !important;
+            }
+            .orders-panel:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .btn-white{
+                transition: all 0.3s ease !important;
+            }
+            .btn-white:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #cfa84e !important;
+                color: white !important;
+            }
+            
+
+            .clear-btn{
+                transition: all 0.3s ease !important;
+            }
+            .clear-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+
+            .apply-btn{
+                transition: all 0.3s ease !important;
+            }
+            .apply-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .fa-eye{
+                transition: all 0.3s ease !important;
+            }
+            .fa-eye:hover{
+                transform: translateY(-5px) !important;
+                color: #b08e30 !important;
+            }
+            .list-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .list-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .kpi-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .kpi-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .reportcards{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .reportcards:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+
+            .table-body .btn-edit{
+                transition: all 0.3s ease !important;
+                display: inline-block;
+            }
+            .table-body .btn-edit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .role-icon-box{transition: all 0.3s ease !important;cursor: pointer;}
+            .role-icon-box:hover{
+                animation: bounce 0.4s;
+            }
+
+            .list-card .btn-gold:hover{
+                background: linear-gradient(90deg, #c5a044, #e2c06d);
+            }
+            
+            
+            
+            
+            
+        }
+
+        
+    </style>
+
+
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+<body>
+<style>
+    /* Main Content Styles */
+            main.content {
+                flex: 1;
+                padding: 40px 60px;
+                background-color: #fcfcfc;
+                margin-left: 260px;
+                /* width: 100%; */
+            }
+
+            .content-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 40px;
+            }
+
+            .header-title-area h1 {
+                font-size: 32px;
+                font-weight: 800;
+                color: #1a1a1a;
+                margin-bottom: 8px;
+            }
+
+            .header-title-area p {
+                color: #b08d57;
+                font-size: 14px;
+                max-width: 600px;
+                line-height: 1.5;
+            }
+
+            .header-actions {
+                display: flex;
+                gap: 12px;
+            }
+
+            .btn-outline {
+                background: #fff;
+                border: 1px solid #eee;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                color: #333;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: border-color 0.2s;
+            }
+
+            .btn-outline:hover {
+                border-color: #d4a017;
+            }
+
+            /* Table Styles */
+            .table-card {
+                background: #fff;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+                overflow: auto;
+            }
+
+            .table-header {
+                background-color: #fbc02d;
+                display: grid;
+                grid-template-columns: 1.5fr 3fr 1fr 1fr;
+                padding: 18px 30px;
+                color: #1a1a1a;
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+            .table-row {
+                display: grid;
+                grid-template-columns: 1.5fr 3fr 1fr 1fr;
+                padding: 25px 30px;
+                border-bottom: 1px solid #f0f0f0;
+                align-items: center;
+            }
+
+            .role-info {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .role-icon-box {
+                width: 45px;
+                height: 45px;
+                background-color: #f5f5f5;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #888;
+                font-size: 18px;
+            }
+
+            .role-name-details h3 {
+                font-size: 15px;
+                font-weight: 700;
+                color: #1a1a1a;
+            }
+
+            .role-name-details span {
+                font-size: 11px;
+                color: #b08d57;
+                font-weight: 500;
+            }
+
+            .role-description {
+                font-size: 13px;
+                color: #666;
+                line-height: 1.6;
+                padding-right: 40px;
+            }
+
+            .access-level-badge {
+                display: inline-block;
+                padding: 6px 12px;
+                background-color: #f0f0f0;
+                border-radius: 20px;
+                font-size: 10px;
+                font-weight: 800;
+                color: #1a1a1a;
+                text-align: center;
+                width: fit-content;
+            }
+
+            .btn-edit {
+                background-color: #d4a017;
+                color: #fff;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s;
+                white-space: nowrap;
+                text-decoration:none;
+            }
+
+            .btn-edit:hover {
+                background-color: #b08d57;
+            }
+
+            /* Pagination Styles */
+            .table-footer {
+                padding: 20px 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .showing-text {
+                font-size: 13px;
+                color: #888;
+            }
+
+            .showing-text strong {
+                color: #333;
+            }
+
+            .pagination {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .page-btn {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #eee;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                color: #777;
+                cursor: pointer;
+                background: #fff;
+                transition: all 0.2s;
+            }
+
+            .page-btn.active {
+                background-color: #fbc02d;
+                border-color: #fbc02d;
+                color: #1a1a1a;
+            }
+
+            .page-btn:hover:not(.active) {
+                border-color: #d4a017;
+                color: #d4a017;
+            }
+
+            /* Footer Bar */
+            .site-footer {
+                background-color: #222;
+                color: #aaa;
+                padding: 15px 60px;
+                text-align: right;
+                font-size: 12px;
+                position: fixed;
+                bottom: 34px;
+                right: 0;
+                width: 100%;
+                position: fixed;
+                bottom: 0;
+            }
+
+            /* Custom Icon Styling */
+            .fa-laptop-code {
+                position: relative;
+            }
+            .logo-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+            .logo-wrapper i {
+                font-size: 48px;
+            }
+            .logo-wrapper::after {
+                content: "\f044"; /* fa-pen-to-square */
+                font-family: "Font Awesome 6 Free";
+                font-weight: 900;
+                position: absolute;
+                top: 10px;
+                right: 12px;
+                font-size: 16px;
+                color: #d4a017;
+                background: white;
+                padding: 2px;
+            }
+</style>
+    <div class="app-container">
+        <!-- Sidebar -->
+        
+    <aside>
+    <div class="logo">
+        <div class="logo-icon">
+            <a href="demo.html">
+                <img src="Parents/images/canteen_logo.png">
+            </a>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="adminpaneldashboard.html" class="">Dashboard</a></li>
+            <li><a href="adminpanelreports.html" class="">Reports</a></li>
+            <li><a href="adminpanelorderhistory.html" class="">Order History</a></li>
+            <!-- <li><a href="adminpanelstudentmanagement.html" class="">Student Management</a></li> -->
+             <li><a href="adminpanelschoolmanagement.html" class="">School Management</a></li>
+            <li><a href="adminpanelstudentmanagement.html" class="">Student Management</a></li>
+            <li><a href="adminpanelparentsmanagement.html" class="">Parent & Teacher Management</a></li>
+            <li><a href="adminpanelcanteenmanagement.html" class="">Canteen Management</a></li>
+            <li><a href="adminpanelkitchenmanagement.html" class="">Kichen Management</a></li>
+            <!-- <li><a href="adminpanelregistrations.html" class="">Parent & Teacher Registrations</a></li> -->
+            <!-- <li><a href="adminpanelschoolregistrations.html" class="">Registrations</a></li> -->
+            <li><a href="adminpaneluserrolepermission.html" class="active">User Roles & Permissions</a></li>
+            <!-- <li><a href="adminpanelsetting.html" class="">Setting</a></li> -->
+        </ul>
+    </nav>
+</aside>
+
+
+
+<style>
+    .logo{margin-bottom: 40px;}
+
+    nav ul li a.active {
+    background: linear-gradient(90deg, #e2c06d, #c5a044);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(197, 160, 68, 0.3);
+}
+.logo-icon a {
+    display: block;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+</style>        <!-- Main Content -->
+        <main class="content">
+            <header class="content-header">
+                <div class="header-title-area">
+                    <h1>Role Management</h1>
+                    <p>Define and customize system access levels for administrators, managers, and support staff within the school canteen ecosystem.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-outline"><i class="fa-solid fa-filter"></i> Filter</button>
+                    <button class="btn-outline" id="exportReport"><i class="fa-solid fa-download" ></i> Export Report</button>
+                </div>
+            </header>
+
+            <section class="table-card">
+                <div class="table-header">
+                    <div>ROLE NAME</div>
+                    <div>ROLE DESCRIPTION</div>
+                    <div>ACCESS LEVEL</div>
+                    <div>ACTIONS</div>
+                </div>
+
+                <div class="table-body">
+                    <!-- Row 1 -->
+                    <div class="table-row">
+                        <div class="role-info">
+                            <div class="role-icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div class="role-name-details">
+                                <h3>GM</h3>
+                                <span>General Management</span>
+                            </div>
+                        </div>
+                        <div class="role-description">
+                            Full system administrative privileges across all modules and financial reporting.
+                        </div>
+                        <div>
+                            <span class="access-level-badge">FULL</span>
+                        </div>
+                        <div>
+                            <a href="adminpaneleditpermission.html" class="btn-edit">Edit Permissions</a>
+                        </div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="table-row">
+                        <div class="role-info">
+                            <div class="role-icon-box"><i class="fa-solid fa-chart-simple"></i></div>
+                            <div class="role-name-details">
+                                <h3>Executive</h3>
+                                <span>Corporate Level</span>
+                            </div>
+                        </div>
+                        <div class="role-description">
+                            High-level visibility into regional analytics, performance metrics, and budgets.
+                        </div>
+                        <div>
+                            <span class="access-level-badge">RESTRICTED</span>
+                        </div>
+                        <div>
+                            <a href="adminpaneleditpermission.html" class="btn-edit">Edit Permissions</a>
+                        </div>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="table-row">
+                        <div class="role-info">
+                            <div class="role-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                            <div class="role-name-details">
+                                <h3>School Manager</h3>
+                                <span>On-site Operations</span>
+                            </div>
+                        </div>
+                        <div class="role-description">
+                            Manage specific canteen inventory, local staff, and daily transaction logs.
+                        </div>
+                        <div>
+                            <span class="access-level-badge">RESTRICTED</span>
+                        </div>
+                        <div>
+                            <a href="adminpaneleditpermission.html" class="btn-edit">Edit Permissions</a>
+                        </div>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="table-row">
+                        <div class="role-info">
+                            <div class="role-icon-box"><i class="fa-solid fa-users"></i></div>
+                            <div class="role-name-details">
+                                <h3>Supervisor</h3>
+                                <span>Floor Operations</span>
+                            </div>
+                        </div>
+                        <div class="role-description">
+                            Oversee daily shifts, handle immediate customer escalations, and view reports.
+                        </div>
+                        <div>
+                            <span class="access-level-badge">LIMITED</span>
+                        </div>
+                        <div>
+                            <a href="adminpaneleditpermission.html" class="btn-edit">Edit Permissions</a>
+                        </div>
+                    </div>
+
+                    <!-- Row 5 -->
+                    <div class="table-row">
+                        <div class="role-info">
+                            <div class="role-icon-box"><i class="fa-solid fa-headset"></i></div>
+                            <div class="role-name-details">
+                                <h3>Customer Care</h3>
+                                <span>Support Desk</span>
+                            </div>
+                        </div>
+                        <div class="role-description">
+                            Access to user profiles, order histories, and help ticket systems.
+                        </div>
+                        <div>
+                            <span class="access-level-badge">LIMITED</span>
+                        </div>
+                        <div>
+                            <a href="adminpaneleditpermission.html" class="btn-edit">Edit Permissions</a>
+                        </div>
+                    </div>
+
+                    <!-- Row 6 -->
+                    <div class="table-row">
+                        <div class="role-info">
+                            <div class="role-icon-box"><i class="fa-solid fa-utensils"></i></div>
+                            <div class="role-name-details">
+                                <h3>Canteen Manager</h3>
+                                <span>Menu & Service</span>
+                            </div>
+                        </div>
+                        <div class="role-description">
+                            Control menu items, pricing, and specific kitchen staff workflows.
+                        </div>
+                        <div>
+                            <span class="access-level-badge">RESTRICTED</span>
+                        </div>
+                        <div>
+                            <a href="adminpaneleditpermission.html" class="btn-edit">Edit Permissions</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-footer">
+                    <div class="showing-text">Showing <strong>6 roles out of 14</strong></div>
+                    <div class="pagination">
+                        <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="site-footer">
+    Design and Develop By RSI Concepts
+</footer>
+
+
+</body>
+</html>
+
+<script>
+$(document).ready(function() {
+    const $rows = $(".table-body .table-row");
+    const rowsPerPage = 4; // number of rows per page
+    const totalRows = $rows.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    let currentPage = 1;
+
+    const $pagination = $(".table-footer .pagination");
+    const $showingText = $(".table-footer .showing-text strong");
+
+    // Render rows for a page
+    function renderPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        $rows.hide().slice(start, end).fadeIn(200);
+
+        updatePagination(page);
+        updateShowingText(page);
+    }
+
+    // Create/update pagination buttons
+    function updatePagination(page) {
+        $pagination.empty();
+
+        // Previous button
+        const $prev = $('<button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>');
+        if (page === 1) $prev.attr("disabled", true);
+        $prev.click(function() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+        $pagination.append($prev);
+
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const $btn = $('<button class="page-btn"></button>').text(i);
+            if (i === page) $btn.addClass("active");
+            $btn.click(function() {
+                currentPage = i;
+                renderPage(currentPage);
+            });
+            $pagination.append($btn);
+        }
+
+        // Next button
+        const $next = $('<button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>');
+        if (page === totalPages) $next.attr("disabled", true);
+        $next.click(function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+        $pagination.append($next);
+    }
+
+    // Update "Showing X-Y of Z"
+    function updateShowingText(page) {
+        const startRow = (page - 1) * rowsPerPage + 1;
+        const endRow = Math.min(page * rowsPerPage, totalRows);
+        $showingText.text(`${startRow}-${endRow} roles out of ${totalRows}`);
+    }
+
+    // Initial render
+    renderPage(currentPage);
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$('#exportReport').click(function() {
+    let csv = [];
+    const rows = $('.table-body .table-row');
+
+    // Add headers
+    const headers = [];
+    $('.table-header > div').each(function() {
+        headers.push($(this).text().trim());
+    });
+    csv.push(headers.join(","));
+
+    // Add table rows
+    rows.each(function() {
+        const cols = [];
+        $(this).find('> div').each(function() {
+            let text = $(this).text().trim();
+            // Remove line breaks and commas inside cells
+            text = text.replace(/\n/g, " ").replace(/,/g, ";");
+            cols.push(text);
+        });
+        csv.push(cols.join(","));
+    });
+
+    // Create CSV file
+    const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+
+    // Create download link
+    const downloadLink = document.createElement("a");
+    downloadLink.download = "role_report.csv";
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+});
+</script>

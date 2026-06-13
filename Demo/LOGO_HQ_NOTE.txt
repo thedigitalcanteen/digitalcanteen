@@ -1,0 +1,1 @@
+Updated logo: high-resolution 774x840 canteen_logo.png, recolored to the lighter original-like gold, and CSS forces display at 129x140 so it appears like the original size without being blurry. demo.html/logo.png was not changed.

@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Head Office Dashboard</title>
+    
+        <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <!-- SheetJS for Excel export -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+                <style>
+
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .btn-white {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .btn-gold {
+            background: linear-gradient(90deg, #e2c06d, #c5a044);
+            color: #fff;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card.pattern::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#eee 1px, transparent 1px);
+            background-size: 15px 15px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon-bg {
+            width: 45px;
+            height: 45px;
+            background-color: #fff9e6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            font-size: 18px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+
+        .badge-green { background-color: #e6f7ef; color: #28a745; }
+        .badge-gold { background-color: #fff9e6; color: #d4af37; }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #8a92a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: normal;
+            justify-content: space-between;
+            height: 180px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 15%;
+            justify-content: end;
+        }
+
+        .bar {
+            width: 100%;
+            background-color: #d4af37;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s ease;
+        }
+
+        .bar-label {
+            font-size: 10px;
+            color: #888;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Donut Chart */
+        .donut-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 180px;
+            position: relative;
+        }
+
+        .donut {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#d4af37 0% 65%, #f2e6c2 65% 85%, #b3912e 85% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: donutSpin 1.5s linear forwards;
+        }
+
+        @keyframes donutSpin {
+            from {
+                background: conic-gradient(#e5e5e5 0% 0%, #e5e5e5 0% 100%);
+            }
+            to {
+                background: conic-gradient(
+                    #d4af37 0% 55%,
+                    #f2e6c2 55% 80%,
+                    #b3912e 80% 100%
+                );
+            }
+        }
+			        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+	margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+        }
+
+        .donut::before {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+
+        .donut-text {
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .donut-percent {
+            font-size: 22px;
+            font-weight: 800;
+            display: block;
+        }
+
+        .donut-label {
+            font-size: 8px;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Bottom Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .table-card, .list-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .view-all {
+            font-size: 12px;
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #8a92a6;
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        td {
+            padding: 18px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #f8f8f8;
+        }
+
+        .tx-id { font-weight: 700; color: #333; }
+        .school-name { font-size: 11px; color: #666; line-height: 1.4; max-width: 150px; }
+        .student-name { font-weight: 500; color: #555; }
+        .revenue { font-weight: 700; color: #333; }
+        .revenue span { display: block; font-size: 10px; color: #888; }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-confirmed { background-color: #e6f7ef; color: #28a745; }
+        .status-processing { background-color: #fff9e6; color: #d4af37; }
+
+        /* Top Selling Items */
+        .selling-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .item-img {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 3px;
+        }
+
+        .item-meta {
+            font-size: 10px;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .item-price-info {
+            text-align: right;
+        }
+
+        .item-price {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .item-change {
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .change-up { color: #28a745; }
+        .change-down { color: #dc3545; }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px 40px;
+            background-color: #1a1a1a;
+            color: #fff;
+            text-align: right;
+            font-size: 12px;
+            margin-left: -40px;
+            margin-right: -40px;
+            margin-bottom: -40px;
+        }
+
+        footer span {
+            opacity: 0.7;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+    </style>
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #fcfcfc;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        aside {
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-container {
+            padding: 0 30px 40px;
+            text-align: center;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 14px;
+            color: #d4af37;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            padding: 5px 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #777;
+            font-size: 13px;
+            font-weight: 500;
+            display: block;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        nav ul li a.active {
+            background: linear-gradient(90deg, #e2c06d, #c5a044);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(197, 160, 68, 0.3);
+        }
+
+        /* Main Content Styles */
+        main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+        .logo {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+        nav ul li {
+            margin-bottom: 5px;
+            padding: 0 15px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #7d7d7d;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 20px;
+            display: block;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        aside{
+            padding: 20px 0;
+        }
+        /* main{width: 75% !important;} */
+
+        @media (min-width: 993px) {
+            .child-card {
+                transition: all 0.3s ease;
+            }
+            .child-card:hover {
+                transform: translateY(-5px);
+                border: 2px solid #d0b04e;
+                background: #e1c67626;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .order-card{
+                transition: all 0.3s ease;
+            }
+            .order-card:hover{
+                transition: all 0.3s ease;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .category-item{
+                transition: all 0.3s ease;
+            }
+            .category-item:hover{
+                background-color: #d4b055;
+                border-color: #d4b055;
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .menu-card{
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .menu-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .newtopup a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .newtopup a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c9a758;
+                color: white;
+            }
+            .orderButton{
+                transition: all 0.3s ease;
+            }
+            .orderButton:hover{
+                transform: translateY(-5px);
+                /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
+                background: #c9a758;
+            }
+            .actions-cell a{
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+            .actions-cell a:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                color: white;
+            }
+            .page-btn{
+                transition: all 0.3s ease;
+            }
+            .page-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .filter-btn{
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #c6a752;
+                color: white;
+            }
+            .btn-outline{
+                transition: all 0.3s ease !important;
+            }
+            .btn-outline:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-primary{
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.sarah{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.sarah:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-entry.alex{
+                transition: all 0.3s ease;
+            }
+            .meal-entry.alex:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn {
+                transition: all 0.3s ease !important;
+            }
+            .btn-secondary:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .schedule-card .meal-item{
+                transition: all 0.3s ease;
+            }
+            .schedule-card .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #e5d5a1;
+            }
+            .tab-btn:hover {
+                border-bottom: 3px solid #c9a758;
+            }
+            .calendar-day .meal-item{
+                transition: all 0.3s ease;
+            }
+            .calendar-day .meal-item:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .day-actions .btn-action{
+                transition: all 0.3s ease;
+            }
+            .day-actions .btn-action:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .stat-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .stat-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .balance-pill{
+                transition: all 0.3s ease;
+            }
+            .balance-pill:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .meal-card{
+                transition: all 0.3s ease;
+            }
+            .meal-card:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #c9a758;
+            }
+            .icon-btn{
+                transition: all 0.3s ease;
+            }
+            .icon-btn:hover{
+                animation: bounce 0.4s;
+            }
+            @keyframes bounce {
+                0%   { transform: translateY(0); }
+                30%  { transform: translateY(-6px); }
+                60%  { transform: translateY(3px); }
+                100% { transform: translateY(0); }
+            }
+            .ActionBtnTabs .tab-btn.active {
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .ActionBtnTabs .tab-btn{
+                border: 1px solid #ccc !important;
+                transition: all 0.3s ease;
+            }
+            
+            .ActionBtnTabs .tab-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #111827;
+                color:white;
+                border-bottom: 3px solid #c9a758 !important;
+            }
+            .quick-pay-btn{
+                transition: all 0.3s ease;
+            }
+            .quick-pay-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card-order{
+                transition: all 0.3s ease;
+            }
+            .card-order:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .action-btn{
+                transition: all 0.3s ease;
+            }
+            .action-btn:hover{
+                transform: translateY(-5px);
+                color: #d4af37;
+            }
+            .page-num{
+                transition: all 0.3s ease;
+            }
+            .page-num:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #eec218;
+                color: white;
+            }
+            .section-header .view-link:hover{
+                color: #ebaa12;
+            }
+            .order-card .btn-reorder:hover{
+                background-color: #c9a758;
+            }
+            .confirm-order:hover{
+                background-color: #c9a758;
+            }
+            .btn-add-order{
+                background-color: #e1c98d !important;
+            }
+            .btn-add-order:hover{
+                background-color: #c9a758 !important;
+            }
+            .pencilcolor svg{
+                transition: all 0.3s ease;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .pencilcolor svg:hover{
+                animation: bounce 0.4s;
+                color: #996d00;
+            }
+            .meal-actions .remove-meal:hover{
+                animation: bounce 0.4s;
+            }
+            .btn-cancel{
+                transition: all 0.3s ease;
+            }
+            .btn-cancel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btn-save{
+                transition: all 0.3s ease;
+            }
+            .btn-save:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btnarrow:hover{
+                color: #996d00;
+            }
+            #prevMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            #nextMonth:hover{
+                background-color: #996d00;
+                color: white;
+            }
+            .topupsetcolor{
+                transition: all 0.3s ease;
+            }
+            .topupsetcolor:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .plus:hover{
+                background-color: #996d00;
+            }
+            .minus:hover{
+                background-color: #996d00;
+            }
+            nav ul li a:hover:not(.active) {
+                background: linear-gradient(90deg, #d4af37, #e5d5a1);
+                color:white;
+            }
+            .upload-box{
+                transition: all 0.3s ease;
+            }
+            .upload-box:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 2px solid #d4af37;
+            }
+            .btn-upload:hover{
+                background-color: #c9a758;
+                color: white;
+            }
+            .buttonanchar{
+                transition: all 0.3s ease !important;
+            }
+            .buttonanchar:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-add{
+                transition: all 0.3s ease !important;
+            }
+            .btn-add:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .btn-block{
+                transition: all 0.3s ease !important;
+            }
+            .btn-block:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background: #d4af37;
+                /* border: 1px solid #d4af37; */
+                color: white;
+            }
+            .btn-submit{
+                transition: all 0.3s ease !important;
+            }
+            .btn-submit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .view-all-link:hover{
+                color: #996d00;
+            }
+            .panel{
+                transition: all 0.3s ease !important;
+            }
+            .panel:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+
+            .save-btn-alert{
+                transition: all 0.3s ease;
+            }
+            .save-btn-alert:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .btn-change{
+                transition: all 0.3s ease;
+                color: white;
+            }
+            .btn-change:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .child-alertcard{
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .child-alertcard:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+            .add-student-btn{
+                transition: all 0.3s ease !important;
+            }
+            .add-student-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .submit-btn{
+                transition: all 0.3s ease !important;
+            }
+            .submit-btn:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+                background-color: #b08e30;
+                color: white !important;
+            }
+            .btn-register{
+                transition: all 0.3s ease !important;
+            }
+            .btn-register:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+                border: 2px solid #b08e30 !important;
+            }
+            .btn-gold{
+                transition: all 0.3s ease !important;
+                color: white !important;
+            }
+            .btn-gold:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-apply{
+                transition: all 0.3s ease !important;
+            }
+            .btn-apply:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .chart-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .chart-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            /* .table-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .table-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            } */
+            .search-box .fa-magnifying-glass {
+                position: absolute;
+                align-self: center;
+                left: 2px;
+            }
+
+            .btn-export{
+                transition: all 0.3s ease !important;
+            }
+            .btn-export:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-approve-all{
+                transition: all 0.3s ease !important;
+            }
+            .btn-approve-all:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .btn-reject{
+                transition: all 0.3s ease !important;
+            }
+            .btn-reject:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #d4af37 !important;
+                border: 1px solid #d4af37;
+                color: white !important;
+            }
+            .btn-approve{
+                transition: all 0.3s ease !important;
+            }
+            .btn-approve:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #d4af37 !important;
+                color: white !important;
+            }
+
+            .tab.active{
+                background-color: #f0c418 !important;
+                color: white !important;
+            }
+            .tab:hover{
+                background-color: #f0c418;
+                color: white;
+                margin: auto 2px;
+            }
+            .orders-panel{
+                transition: all 0.3s ease !important;
+            }
+            .orders-panel:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .btn-white{
+                transition: all 0.3s ease !important;
+            }
+            .btn-white:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #cfa84e !important;
+                color: white !important;
+            }
+            
+
+            .clear-btn{
+                transition: all 0.3s ease !important;
+            }
+            .clear-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+
+            .apply-btn{
+                transition: all 0.3s ease !important;
+            }
+            .apply-btn:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #b08e30 !important;
+                color: white !important;
+            }
+            .fa-eye{
+                transition: all 0.3s ease !important;
+            }
+            .fa-eye:hover{
+                transform: translateY(-5px) !important;
+                color: #b08e30 !important;
+            }
+            .list-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .list-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .kpi-card{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .kpi-card:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+            .reportcards{
+                transition: all 0.3s ease !important;
+                border: 1px solid #f0f0f0;
+            }
+            .reportcards:hover{
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid #d4af37;
+            }
+
+            .table-body .btn-edit{
+                transition: all 0.3s ease !important;
+                display: inline-block;
+            }
+            .table-body .btn-edit:hover{
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+                background-color: #996d00;
+                color: white;
+            }
+            .role-icon-box{transition: all 0.3s ease !important;cursor: pointer;}
+            .role-icon-box:hover{
+                animation: bounce 0.4s;
+            }
+
+            .list-card .btn-gold:hover{
+                background: linear-gradient(90deg, #c5a044, #e2c06d);
+            }
+            
+            
+            
+            
+            
+        }
+
+        
+    </style>
+
+
+
+<!-- Final logo size lock: keeps the high-resolution logo visually the same size as the original. -->
+<style>
+.logo-icon img[src$="canteen_logo.png"],
+.logo-top img[src$="canteen_logo.png"],
+.custom-logo img[src$="canteen_logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-container .custom-logo img[src$="logo.png"],
+.custom-logo .logo-top img[src$="logo.png"] {
+    width: 129px !important;
+    height: 140px !important;
+    max-width: 129px !important;
+    max-height: 140px !important;
+    object-fit: contain !important;
+}
+.logo-icon a,
+.logo-top a,
+.custom-logo a {
+    display: inline-block;
+}
+</style>
+
+</head>
+<body>
+
+    <aside>
+    <div class="logo">
+        <div class="logo-icon">
+            <a href="demo.html">
+                <img src="Parents/images/canteen_logo.png">
+            </a>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="adminpaneldashboard.html" class="active">Dashboard</a></li>
+            <li><a href="adminpanelreports.html" class="">Reports</a></li>
+            <li><a href="adminpanelorderhistory.html" class="">Order History</a></li>
+            <!-- <li><a href="adminpanelstudentmanagement.html" class="">Student Management</a></li> -->
+             <li><a href="adminpanelschoolmanagement.html" class="">School Management</a></li>
+            <li><a href="adminpanelstudentmanagement.html" class="">Student Management</a></li>
+            <li><a href="adminpanelparentsmanagement.html" class="">Parent & Teacher Management</a></li>
+            <li><a href="adminpanelcanteenmanagement.html" class="">Canteen Management</a></li>
+            <li><a href="adminpanelkitchenmanagement.html" class="">Kichen Management</a></li>
+            <!-- <li><a href="adminpanelregistrations.html" class="">Parent & Teacher Registrations</a></li> -->
+            <!-- <li><a href="adminpanelschoolregistrations.html" class="">Registrations</a></li> -->
+            <li><a href="adminpaneluserrolepermission.html" class="">User Roles & Permissions</a></li>
+            <!-- <li><a href="adminpanelsetting.html" class="">Setting</a></li> -->
+        </ul>
+    </nav>
+</aside>
+
+
+
+<style>
+    .logo{margin-bottom: 40px;}
+
+    nav ul li a.active {
+    background: linear-gradient(90deg, #e2c06d, #c5a044);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(197, 160, 68, 0.3);
+}
+.logo-icon a {
+    display: block;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+</style>
+    <main>
+        <header>
+    <div class="header-title">
+        <h1>Executive Head Office Dashboard</h1>
+        <p>Real-time oversight across all school canteen networks.</p>
+    </div>
+    <div class="header-actions">
+        <button class="btn btn-white">
+            <i class="fa-regular fa-calendar"></i> Current Term
+        </button>
+        <button class="btn btn-gold">
+            <i class="fa-solid fa-download"></i> Executive Summary
+        </button>
+    </div>
+</header>
+
+<style>
+.searchbox {
+    position: absolute;
+    margin: 12px;
+    align-self: center;
+    color: black;
+}
+</style>
+        
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-bg"><i class="fa-solid fa-building"></i></div>
+                    <span class="badge badge-green">+3 New</span>
+                </div>
+                <div class="stat-label">Total Schools</div>
+                <div class="stat-value" data-target="128">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-bg"><i class="fa-solid fa-users"></i></div>
+                    <span class="badge badge-green">+1.2k</span>
+                </div>
+                <div class="stat-label">Total Students</div>
+                <div class="stat-value" data-target="45820">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-bg"><i class="fa-solid fa-burger"></i></div>
+                    <span class="badge badge-gold">Active</span>
+                </div>
+                <div class="stat-label">Total Orders Today</div>
+                <div class="stat-value" data-target="8412">0</div>
+            </div>
+            <div class="stat-card pattern">
+                <div class="stat-header">
+                    <div class="stat-icon-bg"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    <span class="badge badge-green">+12%</span>
+                </div>
+                <div class="stat-label">Total Sales Today (AED)</div>
+                <div class="stat-value" data-target="142500">0</div>
+            </div>
+        </section>
+
+        <section class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Sales by School</h3>
+                <div class="bar-chart">
+                    <div class="bar-group">
+                        <div class="bar" style="height: 60%;"></div>
+                        <span class="bar-label">ISD</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 85%;"></div>
+                        <span class="bar-label">GEMS</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 45%;"></div>
+                        <span class="bar-label">DESS</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 95%;"></div>
+                        <span class="bar-label">NAS</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 75%;"></div>
+                        <span class="bar-label">DESC</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Sales by Canteen</h3>
+                <div class="bar-chart">
+                    <div class="bar-group">
+                        <div class="bar" style="height: 40%;"></div>
+                        <span class="bar-label">C1</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 70%;"></div>
+                        <span class="bar-label">C2</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 90%;"></div>
+                        <span class="bar-label">C3</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 55%;"></div>
+                        <span class="bar-label">C4</span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar" style="height: 65%;"></div>
+                        <span class="bar-label">C5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Sales by Food Category</h3>
+                <div class="donut-container">
+                    <div class="donut">
+                        <div class="donut-text">
+                            <span class="donut-percent">100%</span>
+                            <span class="donut-label">Total Share</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><div class="dot" style="background-color: #d4af37;"></div> Hot Meals</div>
+                    <div class="legend-item"><div class="dot" style="background-color: #f2e6c2;"></div> Snacks</div>
+                    <div class="legend-item"><div class="dot" style="background-color: #b3912e;"></div> Beverages</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bottom-grid">
+            <div class="table-card reportcards">
+                <div class="card-header">
+                    <h2>Recent Orders</h2>
+                    <a href="#" class="view-all">View All Transactions</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>School Facility</th>
+                            <th>Student</th>
+                            <th>Revenue</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tx-id">#TXN-90442</td>
+                            <td class="school-name">Dubai International School</td>
+                            <td class="student-name">Faisal Malik</td>
+                            <td class="revenue">AED 45.00</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="tx-id">#TXN-90443</td>
+                            <td class="school-name">GEMS World Academy</td>
+                            <td class="student-name">Sarah Jenkins</td>
+                            <td class="revenue">AED 22.50</td>
+                            <td><span class="status-badge status-processing">Processing</span></td>
+                        </tr>
+                        <tr>
+                            <td class="tx-id">#TXN-90444</td>
+                            <td class="school-name">Nord Anglia School</td>
+                            <td class="student-name">Leo Messi</td>
+                            <td class="revenue">AED 38.00</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="tx-id">#TXN-90445</td>
+                            <td class="school-name">Emirates British School</td>
+                            <td class="student-name">Aisha Khan</td>
+                            <td class="revenue">AED 15.75</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="list-card">
+                <div class="card-header">
+                    <h2>Top Selling Items</h2>
+                </div>
+                <div class="selling-item">
+                    <img src="https://placehold.co/100x100?text=Salad" alt="Premium Quinoa Salad" class="item-img">
+                    <div class="item-info">
+                        <div class="item-name">Premium Quinoa Salad</div>
+                        <div class="item-meta">Healthy Meals • 1,240 Sold</div>
+                    </div>
+                    <div class="item-price-info">
+                        <div class="item-price">AED 43,400</div>
+                        <div class="item-change change-up">+5%</div>
+                    </div>
+                </div>
+                <div class="selling-item">
+                    <img src="https://placehold.co/100x100?text=Pizza" alt="Artisan Margherita" class="item-img">
+                    <div class="item-info">
+                        <div class="item-name">Artisan Margherita</div>
+                        <div class="item-meta">Hot Meals • 985 Sold</div>
+                    </div>
+                    <div class="item-price-info">
+                        <div class="item-price">AED 34,475</div>
+                        <div class="item-change change-up">+2%</div>
+                    </div>
+                </div>
+                <div class="selling-item">
+                    <img src="https://placehold.co/100x100?text=Milk" alt="Organic Chocolate Milk" class="item-img">
+                    <div class="item-info">
+                        <div class="item-name">Organic Chocolate Milk</div>
+                        <div class="item-meta">Beverages • 2,112 Sold</div>
+                    </div>
+                    <div class="item-price-info">
+                        <div class="item-price">AED 21,120</div>
+                        <div class="item-change change-down">-1%</div>
+                    </div>
+                </div>
+                <div class="selling-item">
+                    <img src="https://placehold.co/100x100?text=Wrap" alt="Falafel Tahini Wrap" class="item-img">
+                    <div class="item-info">
+                        <div class="item-name">Falafel Tahini Wrap</div>
+                        <div class="item-meta">Snacks • 856 Sold</div>
+                    </div>
+                    <div class="item-price-info">
+                        <div class="item-price">AED 17,120</div>
+                        <div class="item-change change-up">+8%</div>
+                    </div>
+                </div>
+                <a href="adminpanelorderhistory.html?topsellingitems=1" class="btn btn-gold">View All</a>
+            </div>
+        </section>
+
+        <footer>
+    <span>Design and Develop By RSI Concepts</span>
+</footer>
+
+    </main>
+
+</body>
+</html>
+<style>
+    .btn-gold {
+    background: linear-gradient(90deg, #e2c06d, #c5a044);
+    color: #fff;
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const percentEl = document.querySelector(".donut-percent");
+    let value = 0;
+
+    const timer = setInterval(() => {
+        value++;
+        percentEl.textContent = value + "%";
+        if (value === 100) clearInterval(timer);
+    }, 15);
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll(".stat-value");
+
+    counters.forEach(counter => {
+        const target = +counter.getAttribute("data-target");
+        let current = 0;
+        const duration = 1500; // animation duration in ms
+        const increment = target / (duration / 20); // update every 20ms
+
+        const update = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                counter.textContent = target.toLocaleString(); // final value
+                clearInterval(update);
+            } else {
+                counter.textContent = Math.floor(current).toLocaleString();
+            }
+        }, 20);
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const bars = document.querySelectorAll(".bar");
+
+    bars.forEach(bar => {
+        // Get the target height from inline style
+        const targetHeight = bar.getAttribute("style").match(/height:\s*(\d+%)/)[1];
+        bar.style.height = "0"; // ensure starting from 0
+        setTimeout(() => {
+            bar.style.height = targetHeight; // animate to target
+        }, 1000); // slight delay for DOM render
+    });
+});
+</script>
